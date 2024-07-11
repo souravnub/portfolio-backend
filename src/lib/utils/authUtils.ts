@@ -7,10 +7,10 @@ interface validationRes {
     user: { id: number };
 }
 
-export async function validate(username: string, password: string) {
+export async function validate(name: string, password: string) {
     const user = await prisma.admin.findUnique({
         where: {
-            username,
+            name,
         },
     });
 
@@ -26,6 +26,6 @@ export async function validate(username: string, password: string) {
     return {
         success: true,
         message: "validation successfull",
-        user: { id: user.id, username: user.username },
+        user: { id: user.id.toString(), name: user.name },
     };
 }

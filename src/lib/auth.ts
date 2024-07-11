@@ -4,14 +4,15 @@ import { validate } from "./utils/authUtils";
 import NextAuth, { CredentialsSignin } from "next-auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    secret: process.env.AUTH_SECRET,
     providers: [
         Credentials({
             name: "usernmae",
             credentials: {
-                username: {
-                    label: "username",
+                name: {
+                    label: "name",
                     type: "text",
-                    placeholder: "Enter your username",
+                    placeholder: "Enter your name",
                 },
                 password: {
                     label: "password",
@@ -22,12 +23,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             authorize: async (credentials) => {
                 const parsedCredentials = z
                     .object({
-                        username: z
+                        name: z
                             .string()
-                            .min(
-                                1,
-                                "username should be minimum 1 character long"
-                            ),
+                            .min(1, "name should be minimum 1 character long"),
                         password: z.string(),
                     })
                     .safeParse(credentials);
@@ -36,14 +34,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     throw new CredentialsSignin("invalid inputs");
                 }
 
-                const { username, password } = parsedCredentials.data;
-                const validationRes = await validate(username, password);
+                const { name, password } = parsedCredentials.data;
+                const validationRes = await validate(name, password);
 
                 if (!validationRes.success) {
                     throw new CredentialsSignin(validationRes.message);
                 }
-
-                return null;
+                // will never happed as user will always exsist on success
+                if (!validationRes.user) {
+                    return null;
+                }
+                return validationRes.user;
             },
         }),
     ],
