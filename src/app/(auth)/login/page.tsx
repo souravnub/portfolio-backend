@@ -6,14 +6,11 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
 import Link from "next/link";
 
 export default async function LoginPage() {
-    const session = await auth();
-
     return (
-        <div className="container max-w-2xl ">
+        <div className="container max-w-2xl pt-20">
             <Card>
                 <CardHeader className="space-y-2">
                     <CardTitle>Login to portfolio manager</CardTitle>

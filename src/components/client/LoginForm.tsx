@@ -1,6 +1,6 @@
 "use client";
 import { Label } from "@radix-ui/react-label";
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
@@ -10,8 +10,11 @@ import { useRouter } from "next/navigation";
 const LoginForm = () => {
     const { toast } = useToast();
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
-    async function handleLoginFormAction(formData: FormData) {
+    async function handleLoginFormAction(e: FormEvent) {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
         const name = formData.get("name") as string | undefined;
         const password = formData.get("password") as string | undefined;
 
@@ -22,12 +25,13 @@ const LoginForm = () => {
                 description: "Please provide all the credentials",
             });
         }
-
+        setIsLoading(true);
         const res = await signIn("credentials", {
             name,
             password,
             redirect: false,
         });
+        setIsLoading(false);
         if (res?.error) {
             return toast({
                 variant: "destructive",
@@ -43,7 +47,7 @@ const LoginForm = () => {
     return (
         <form
             className="grid w-full items-center gap-4"
-            action={handleLoginFormAction}>
+            onSubmit={handleLoginFormAction}>
             <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name</Label>
                 <Input id="name" name="name" />
@@ -53,8 +57,8 @@ const LoginForm = () => {
                 <Input id="password" type="password" name="password" />
             </div>
 
-            <Button type="submit" className="px-8 w-min">
-                Login
+            <Button type="submit" disabled={isLoading} className="px-8 w-min">
+                {isLoading ? "loading..." : "Login"}
             </Button>
         </form>
     );
