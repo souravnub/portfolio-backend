@@ -19,7 +19,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <NextAuthProvider>
-                <body className={inter.className}>
+                <body className={`${inter.className} dark`}>
                     {children}
                     <Toaster />
                 </body>
