@@ -27,7 +27,7 @@ const Appbar = () => {
 
     return (
         <nav>
-            <ul>
+            <ul className="text-sm">
                 {Links.map((link) => {
                     return (
                         <Link
