@@ -12,13 +12,13 @@ const ProjectsFeed = async ({ query }: { query?: string }) => {
             OR: [
                 {
                     name: {
-                        contains: searchTerm?.trim(),
+                        contains: searchTerm?.trim() || "",
                         mode: "insensitive",
                     },
                 },
                 {
                     description: {
-                        contains: searchTerm?.trim(),
+                        contains: searchTerm?.trim() || "",
                         mode: "insensitive",
                     },
                 },
