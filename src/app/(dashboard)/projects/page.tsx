@@ -13,9 +13,9 @@ const ProjectsPage = async ({
 }) => {
     return (
         <div className="space-y-5">
-            <div className="flex gap-2">
+            <div className="flex gap-2 ">
                 <ProjectSearch initialSearchQuery={searchParams?.q} />
-                <Button>Add New</Button>
+                <Button className="h-10">Add New</Button>
             </div>
 
             <Suspense key={searchParams?.q} fallback={<ProjectsSkeleton />}>
