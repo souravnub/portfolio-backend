@@ -3,10 +3,13 @@ import React, { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
     return (
-        <div>
+        <>
             <Appbar />
-            {children}
-        </div>
+
+            <main>
+                <div className="container py-4">{children}</div>
+            </main>
+        </>
     );
 };
 
