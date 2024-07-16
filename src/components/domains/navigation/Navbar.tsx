@@ -14,11 +14,18 @@ const Appbar = () => {
     const path = usePathname();
 
     useEffect(() => {
-        const lastPathEle = path.split("/")[path.split("/").length - 1];
-        const currentPath = "/" + lastPathEle;
+        console.log(path);
 
-        const activeLinkEle = Links.find((link) => link.href === currentPath);
+        if (path === "/") {
+            return setActiveLink(1);
+        }
+
+        const activeLinkEle = Links.filter((link) => link.href !== "/").find(
+            (link) => path.includes(link.href)
+        );
+
         if (activeLinkEle === undefined) return setActiveLink(null);
+
         setActiveLink(activeLinkEle.id);
     }, [path]);
 
