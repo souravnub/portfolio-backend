@@ -30,7 +30,7 @@ export function ProjectSearch({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Search Projects..."
-                className="w-full rounded-lg bg-background pl-8 py-5"
+                className="w-full rounded-lg pl-8 py-5"
             />
             {input.length > 0 && (
                 <Button

@@ -8,7 +8,7 @@ import NotificationPopover from "./NotificationPopover";
 
 const Topbar = () => {
     return (
-        <div className="border-b bg-muted/20">
+        <div className="border-b">
             <div className="flex justify-between  container">
                 <Navbar />
 
