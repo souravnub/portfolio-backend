@@ -1,13 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { auth } from "@/lib/auth";
+import Link from "next/link";
+import React from "react";
 
-export default async function Dashboard() {
-    const session = await auth();
-    // console.log(session);
+const DashboardPage = () => {
     return (
-        <main>
-            <h1>hello</h1>
-            <Button>Hello world</Button>
-        </main>
+        <div>
+            <h1>DashboardPage - overview of everything</h1>
+            <Button asChild variant={"link"}>
+                <Link href={"/projects"}>Manage Projects</Link>
+            </Button>
+            <Button asChild variant={"link"}>
+                <Link href={"/content"}>Manage content</Link>
+            </Button>
+        </div>
     );
-}
+};
+
+export default DashboardPage;

@@ -6,8 +6,8 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         <>
             <Appbar />
 
-            <main className="bg-muted/20">
-                <div className="container py-4">{children}</div>
+            <main className="">
+                <div className="py-4">{children}</div>
             </main>
         </>
     );

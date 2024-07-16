@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 
 const Links = [
     { id: 1, title: "Overview", href: "/" },
-    { id: 2, title: "Projects", href: "/projects" },
+    { id: 2, title: "Content", href: "/content" },
+    { id: 3, title: "Projects", href: "/projects" },
 ];
 
 const Appbar = () => {
@@ -16,13 +17,9 @@ const Appbar = () => {
         const lastPathEle = path.split("/")[path.split("/").length - 1];
         const currentPath = "/" + lastPathEle;
 
-        Links.forEach((link) => {
-            if (link.href === currentPath) {
-                setActiveLink(link.id);
-            } else if (currentPath === "" && link.href === "/") {
-                setActiveLink(link.id);
-            }
-        });
+        const activeLinkEle = Links.find((link) => link.href === currentPath);
+        if (activeLinkEle === undefined) return setActiveLink(null);
+        setActiveLink(activeLinkEle.id);
     }, [path]);
 
     return (
