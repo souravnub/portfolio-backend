@@ -14,8 +14,6 @@ const Appbar = () => {
     const path = usePathname();
 
     useEffect(() => {
-        console.log(path);
-
         if (path === "/") {
             return setActiveLink(1);
         }

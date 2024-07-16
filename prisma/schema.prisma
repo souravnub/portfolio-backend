@@ -34,7 +34,7 @@ model Project {
   brandImageUrl String
   brandNameImageUrl String
 
-  videoUrl String
+  videoUrl String 
   mobileImageUrl1 String
   mobileImageUrl2 String
   mobileVideoUrl String
@@ -50,4 +50,13 @@ model SkillsEnhanced {
   name String
   description String
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model HomePageContent {
+  id Int @id @default(autoincrement())
+  mainImageUrl String
+  country String
+  role String
+  portfolio_slogan String
+  portfolio_description String
 }
