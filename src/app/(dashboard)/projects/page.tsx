@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { ProjectSearch } from "@/components/client/ProjectSearch";
 import ProjectsFeed from "@/components/domains/projects/ProjectsFeeds";
 import ProjectsSkeleton from "@/components/skeletons/ProjectsSkeleton";
+import { ProjectSearch } from "@/components/domains/projects/ProjectSearch";
 
 const ProjectsPage = async ({
     params,

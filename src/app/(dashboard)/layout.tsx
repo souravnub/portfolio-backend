@@ -1,4 +1,4 @@
-import Appbar from "@/components/client/navigation/Appbar";
+import Appbar from "@/components/domains/navigation/Appbar";
 import React, { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {

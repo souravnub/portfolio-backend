@@ -1,12 +1,12 @@
 "use client";
 
-import { Cross, Search } from "lucide-react";
-import { Input } from "../ui/input";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import { MdClose } from "react-icons/md";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function ProjectSearch({
     initialSearchQuery,

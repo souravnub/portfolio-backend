@@ -1,9 +1,9 @@
 "use client";
 import { Label } from "@radix-ui/react-label";
 import React, { FormEvent, useState } from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { useToast } from "../ui/use-toast";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { useToast } from "../../ui/use-toast";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
