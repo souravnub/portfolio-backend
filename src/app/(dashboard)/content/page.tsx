@@ -3,6 +3,8 @@ import ImageUpload from "@/components/domains/content/ImageUpload";
 import prisma from "@/db";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const ContentPage = async () => {
     const homePageContent = await prisma.homePageContent.findFirst();
 
