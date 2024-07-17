@@ -1,3 +1,4 @@
+import { HomePageContentForm } from "@/components/domains/content/HomePageContentForm";
 import ImageUpload from "@/components/domains/content/ImageUpload";
 import prisma from "@/db";
 import React from "react";
@@ -8,6 +9,9 @@ const ContentPage = async () => {
     return (
         <div>
             <ImageUpload imageSource={homePageContent?.mainImageUrl} />
+            <div className="mt-5">
+                <HomePageContentForm initialValues={homePageContent} />
+            </div>
         </div>
     );
 };
