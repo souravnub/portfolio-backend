@@ -55,5 +55,7 @@ export async function updateHomePageContent(
         },
     });
 
+    revalidatePath("/content/");
+
     return { success: true, message: "data updated Successfully!" };
 }
