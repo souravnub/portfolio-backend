@@ -8,6 +8,9 @@ const nextConfig = {
             {
                 hostname: "local-portfolio-bucket.s3.us-east-1.amazonaws.com",
             },
+            {
+                hostname: "portfolio-bucket-prod.s3.us-east-1.amazonaws.com",
+            },
         ],
     },
 };
