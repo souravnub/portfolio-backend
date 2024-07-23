@@ -1,3 +1,4 @@
+import { updateHomePageImage } from "@/actions";
 import { HomePageContentForm } from "@/components/domains/content/HomePageContentForm";
 import ImageUpload from "@/components/domains/content/ImageUpload";
 import prisma from "@/db";
@@ -10,7 +11,10 @@ const ContentPage = async () => {
 
     return (
         <div>
-            <ImageUpload imageSource={homePageContent?.mainImageUrl} />
+            <ImageUpload
+                imageSource={homePageContent?.mainImageUrl}
+                saveImageInDbAction={updateHomePageImage}
+            />
             <div className="mt-5">
                 <HomePageContentForm initialValues={homePageContent} />
             </div>
