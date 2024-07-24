@@ -19,11 +19,12 @@ model Admin {
   password String
 }
 
+
 model Project {
   id Int @id @default(autoincrement())
   name String 
   role String
-  image String
+  image String?
   yearOfProduction String
   techUsed String[]
   description String
@@ -31,17 +32,19 @@ model Project {
   quote String
 
   brandColor String
-  brandImageUrl String
-  brandNameImageUrl String
+  brandImageUrl String?
+  brandNameImageUrl String?
 
-  videoUrl String 
-  mobileImageUrl1 String
-  mobileImageUrl2 String
-  mobileVideoUrl String
+  videoUrl String?
+  mobileImageUrl1 String?
+  mobileImageUrl2 String?
+  mobileVideoUrl String?
 
   productionLink String
   githubLink String
   inSiteLinkText String //remove this afterwards
+
+  isPublished Boolean @default(false)
 }
 
 model SkillsEnhanced {

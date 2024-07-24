@@ -6,7 +6,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         <>
             <Appbar />
 
-            <main className="">
+            <main>
                 <div className="py-4">{children}</div>
             </main>
         </>
