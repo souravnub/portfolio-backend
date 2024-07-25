@@ -1,6 +1,6 @@
 import { updateHomePageImage } from "@/actions";
 import { HomePageContentForm } from "@/components/domains/content/HomePageContentForm";
-import ImageUpload from "@/components/domains/content/ImageUpload";
+import FileUpload from "@/components/domains/content/FileUpload";
 import prisma from "@/db";
 import React from "react";
 
@@ -11,9 +11,13 @@ const ContentPage = async () => {
 
     return (
         <div>
-            <ImageUpload
-                imageSource={homePageContent?.mainImageUrl}
-                saveImageInDbAction={updateHomePageImage}
+            <FileUpload
+                id="portfolio image"
+                width={500}
+                label="Portfolio Image"
+                fileSource={homePageContent?.mainImageUrl}
+                saveFileInDbAction={updateHomePageImage}
+                assetType="image"
             />
             <div className="mt-5">
                 <HomePageContentForm initialValues={homePageContent} />

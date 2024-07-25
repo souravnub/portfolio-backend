@@ -5,21 +5,92 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { computeSHA256, getImageData } from "@/lib/utils/fileUtils";
+import {
+    ALLOWED_IMAGE_FILE_TYPES,
+    ALLOWED_VIDEO_FILE_TYPES,
+    computeSHA256,
+    getImageData,
+} from "@/lib/utils/fileUtils";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-import { MdImage } from "react-icons/md";
+import { MdImage, MdVideoFile } from "react-icons/md";
 
-const ImageUpload = ({
-    imageSource = null,
-    saveImageInDbAction,
+const Preview = ({
+    preview,
+    assetType,
+    previewWidth,
 }: {
-    imageSource?: string | null;
-    saveImageInDbAction: (url: string) => Promise<void>;
+    preview: string | null;
+    assetType: "image" | "video";
+    previewWidth: number;
+}) => {
+    if (!preview) {
+        return (
+            <div className="text-primary/30 bg-muted/40 w-full h-full grid place-content-center place-items-center gap-2">
+                {assetType === "image" ? (
+                    <MdImage className="text-6xl" />
+                ) : (
+                    <MdVideoFile className="text-6xl" />
+                )}
+                <span className=" font-bold text-xl">
+                    {assetType === "image"
+                        ? "No Image to display"
+                        : "No video to display"}
+                </span>
+            </div>
+        );
+    }
+
+    switch (assetType) {
+        case "image":
+            return (
+                <Image
+                    src={preview}
+                    alt=""
+                    width={previewWidth}
+                    height={0} // will be auto as per css
+                    className="hover:cursor-pointer"
+                />
+            );
+
+        case "video":
+            return (
+                <video
+                    width={previewWidth}
+                    height={"auto"}
+                    autoPlay
+                    loop
+                    muted
+                    src={preview}
+                    className="hover:cursor-pointer"
+                />
+            );
+
+        default:
+            break;
+    }
+};
+
+const FileUpload = ({
+    id,
+    label,
+    width,
+    fileSource = null,
+    saveFileInDbAction,
+    assetType,
+}: {
+    id: string;
+    width: number;
+    label: string;
+    aspectRatio?: number;
+    fileSource?: string | null;
+    assetType: "video" | "image";
+
+    saveFileInDbAction: (url: string) => Promise<void>;
 }) => {
     const { toast } = useToast();
-    const imgInputRef = useRef<HTMLInputElement | null>(null);
-    const [preview, setPreview] = useState(imageSource);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [preview, setPreview] = useState(fileSource);
     const [file, setFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -44,6 +115,7 @@ const ImageUpload = ({
                 variant: "destructive",
                 description: signedUrlRes.message,
             });
+            setIsUploading(false);
             return;
         }
 
@@ -78,18 +150,18 @@ const ImageUpload = ({
             description: "Successfully uploaded to S3",
         });
 
-        const newImageUrl = signedUrlRes.url.split("?")[0];
-        await saveImageInDbAction(newImageUrl);
+        const newFileUrl = signedUrlRes.url.split("?")[0];
+        await saveFileInDbAction(newFileUrl);
 
         setIsUploading(false);
-        setPreview(newImageUrl);
+        setPreview(newFileUrl);
         setFile(null);
     }
 
     return (
-        <div className="relative space-y-2 max-w-lg">
+        <div className="relative space-y-2 w-fit">
             <div className="flex items-center mb-2">
-                <Label htmlFor="imageInp">Portfolio Image</Label>
+                <Label htmlFor={id}>{label}</Label>
                 {/* Undo and save comp */}
                 {file && (
                     <div className="ml-auto space-x-3">
@@ -99,14 +171,14 @@ const ImageUpload = ({
                                 type="button"
                                 className="p-0 h-min hover:underline hover:bg-transparent"
                                 onClick={() => {
-                                    !imageSource
+                                    !fileSource
                                         ? setPreview(null)
-                                        : setPreview(imageSource);
+                                        : setPreview(fileSource);
 
                                     setFile(null);
 
-                                    if (imgInputRef.current) {
-                                        imgInputRef.current.value = "";
+                                    if (fileInputRef.current) {
+                                        fileInputRef.current.value = "";
                                     }
                                 }}>
                                 Undo
@@ -124,34 +196,24 @@ const ImageUpload = ({
                     </div>
                 )}
             </div>
-            <Label htmlFor="imageInp">
-                <AspectRatio
-                    ratio={16 / 9}
-                    className="rounded-lg overflow-hidden">
-                    {/* iamge display */}
-                    {preview ? (
-                        <Image
-                            fill
-                            src={preview}
-                            alt=""
-                            className="object-cover object-top hover:cursor-pointer"
-                        />
-                    ) : (
-                        <div className="text-primary/30 bg-muted/40 w-full h-full grid place-content-center place-items-center gap-2">
-                            <MdImage className="text-6xl" />
-                            <span className=" font-bold text-xl">
-                                no Image To Display
-                            </span>
-                        </div>
-                    )}
-                </AspectRatio>
+            <Label htmlFor={id}>
+                <Preview
+                    assetType={assetType}
+                    preview={preview}
+                    previewWidth={width}
+                />
             </Label>
 
             <div className="flex gap-2">
                 <Input
-                    id="imageInp"
-                    ref={imgInputRef}
+                    id={id}
+                    ref={fileInputRef}
                     type="file"
+                    accept={
+                        assetType == "image"
+                            ? ALLOWED_IMAGE_FILE_TYPES.join(",")
+                            : ALLOWED_VIDEO_FILE_TYPES.join(",")
+                    }
                     className="hover:bg-muted/40 cursor-pointer"
                     multiple={false}
                     onChange={(e) => {
@@ -169,4 +231,4 @@ const ImageUpload = ({
     );
 };
 
-export default ImageUpload;
+export default FileUpload;

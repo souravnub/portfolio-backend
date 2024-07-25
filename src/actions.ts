@@ -1,14 +1,19 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import prisma from "./db";
-import { HomePageContentSchema, ProjectFormSchema } from "./schemas";
-import { auth } from "./lib/auth";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client } from "./lib/utils/awsUtils";
-import { generateUniqueFileName } from "./lib/utils/fileUtils";
+import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import prisma from "./db";
+import { auth } from "./lib/auth";
+import { s3Client } from "./lib/utils/awsUtils";
+import {
+    ALLOWED_IMAGE_FILE_TYPES,
+    ALLOWED_VIDEO_FILE_TYPES,
+    generateUniqueFileName,
+} from "./lib/utils/fileUtils";
+import { HomePageContentSchema, ProjectFormSchema } from "./schemas";
 
 export async function deleteProject(
     prevState: any,
@@ -118,8 +123,7 @@ export async function updateHomePageContent(
     return { success: true, message: "data updated Successfully!" };
 }
 
-const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png"];
-const MAX_FILE_SIZE = 1048576 * 5; // 1048576bytes = 1mb, therefore, 1mb * 5 = 5mb
+const MAX_FILE_SIZE = 1048576 * 10; // 1048576bytes = 1mb, therefore, 1mb * 10 = 10mb
 
 type GetSignedURLParams = {
     fileType: string;
@@ -147,7 +151,11 @@ export async function generateSignedUrl({
             message: "not authenticated",
         };
     }
-    if (!ALLOWED_FILE_TYPES.includes(fileType)) {
+    if (
+        !ALLOWED_IMAGE_FILE_TYPES.concat(ALLOWED_VIDEO_FILE_TYPES).includes(
+            fileType
+        )
+    ) {
         return {
             success: false,
             message: "invalid file type",
@@ -156,7 +164,7 @@ export async function generateSignedUrl({
     if (fileSize > MAX_FILE_SIZE) {
         return {
             success: false,
-            message: "file size larger than 5MB",
+            message: `file size larger than ${MAX_FILE_SIZE / 1048576} MB`,
         };
     }
 

@@ -1,5 +1,12 @@
 import cryptoUtil from "crypto";
 
+export const ALLOWED_IMAGE_FILE_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/avif",
+];
+export const ALLOWED_VIDEO_FILE_TYPES = ["video/mp4", "video/mkv"];
+
 export const computeSHA256 = async (file: File) => {
     const buffer = await file.arrayBuffer();
     const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
