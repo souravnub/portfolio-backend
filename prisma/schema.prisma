@@ -29,7 +29,7 @@ model Project {
   techUsed String[]
   description String
   skillsEnhanced SkillsEnhanced[]
-  quote String
+  quote String?
 
   brandColor String
   brandImageUrl String?
