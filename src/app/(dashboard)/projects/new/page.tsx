@@ -1,5 +1,6 @@
 "use client";
 
+import { createProjectAction } from "@/actions";
 import { Button } from "@/components/ui/button";
 import {
     FormControl,
@@ -10,18 +11,26 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useRef } from "react";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { newProjectFormSchema } from "@/schemas";
-import { MdClose, MdInfo } from "react-icons/md";
 import { Textarea } from "@/components/ui/textarea";
-
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { newProjectFormSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { MdClose, MdInfo } from "react-icons/md";
+import { z } from "zod";
 // adding the images is not supported in adding a new project
 // when a new project is made, the user will be redirected to the edit page of the project, where the user can update the images
+
+// time in seconds after which the redirect should happen
+const REDIRECT_AFTER = 4;
+
 const NewProjectPage = () => {
-    const formRef = useRef<HTMLFormElement>(null);
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof newProjectFormSchema>>({
         resolver: zodResolver(newProjectFormSchema),
@@ -47,12 +56,61 @@ const NewProjectPage = () => {
     async function handleFormSubmit(
         values: z.infer<typeof newProjectFormSchema>
     ) {
-        if (!formRef.current) return;
-        const formData = new FormData(formRef.current);
-        console.log("hello");
-    }
+        setIsLoading(true);
+        const { dismiss: dismissLoadingToast } = toast({
+            description: "Creating project...",
+        });
 
-    console.log(form.formState.errors);
+        const res = await createProjectAction(values);
+
+        if (!res.success) {
+            toast({
+                variant: "destructive",
+                description: res.message,
+            });
+            return;
+        }
+
+        const {
+            id,
+            update,
+            dismiss: dismissRedirectToast,
+        } = toast({
+            title: res.message,
+            description: `Redirecting to edit page in: ${REDIRECT_AFTER}s`,
+            action: (
+                <ToastAction
+                    altText="cancel"
+                    onClick={() => {
+                        clearInterval(interval);
+                        router.push("/projects");
+                    }}>
+                    Cancel
+                </ToastAction>
+            ),
+        });
+
+        let time = REDIRECT_AFTER;
+        const interval = setInterval(() => {
+            time -= 1;
+
+            update({
+                id,
+                description: `Redirecting to edit page in: ${time}s`,
+            });
+
+            if (time === 0) {
+                dismissLoadingToast();
+            }
+
+            if (time < 0) {
+                setIsLoading(false);
+                dismissRedirectToast();
+                clearInterval(interval);
+                router.push(`/projects/edit/${res.projectId}`);
+            }
+        }, 1000);
+    }
 
     return (
         <>
@@ -70,7 +128,6 @@ const NewProjectPage = () => {
             </div>
             <FormProvider {...form}>
                 <form
-                    ref={formRef}
                     onSubmit={form.handleSubmit(handleFormSubmit)}
                     className=" md:grid md:grid-cols-2 md:gap-4">
                     <FormField
@@ -275,8 +332,11 @@ const NewProjectPage = () => {
                         </Button>
                     </div>
 
-                    <Button type="submit" className="w-fit px-9 mt-6">
-                        Submit
+                    <Button
+                        disabled={isLoading}
+                        type="submit"
+                        className="w-fit px-9 mt-6">
+                        {!isLoading ? "Submit" : "Submiting..."}
                     </Button>
                 </form>
             </FormProvider>

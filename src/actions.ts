@@ -2,12 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "./db";
-import { HomePageContentSchema } from "./schemas";
+import { HomePageContentSchema, newProjectFormSchema } from "./schemas";
 import { auth } from "./lib/auth";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "./lib/utils/awsUtils";
 import { generateUniqueFileName } from "./lib/utils/fileUtils";
+import { z } from "zod";
 
 export async function deleteProject(
     prevState: any,
@@ -23,6 +24,43 @@ export async function deleteProject(
     return {
         success: true,
     };
+}
+export async function createProjectAction(
+    values: z.infer<typeof newProjectFormSchema>
+): Promise<
+    | { success: false; message: string }
+    | { success: true; projectId: number; message: string }
+> {
+    const zodParseRes = newProjectFormSchema.safeParse(values);
+
+    if (!zodParseRes.success) {
+        return { success: false, message: "Invalid inputs" };
+    }
+
+    const parsedData = {
+        ...zodParseRes.data,
+        techUsed: zodParseRes.data.techUsed.map((obj) => obj.value),
+    };
+
+    try {
+        const createdProj = await prisma.project.create({
+            data: parsedData,
+            select: {
+                id: true,
+            },
+        });
+        revalidatePath("/projects");
+        return {
+            success: true,
+            message: "project created successfully",
+            projectId: createdProj.id,
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Error while adding project to DB",
+        };
+    }
 }
 
 export async function updateHomePageImage(newImageUrl: string) {
