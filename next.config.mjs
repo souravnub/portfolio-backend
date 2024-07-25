@@ -3,9 +3,6 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                hostname: "know-sourav.netlify.app",
-            },
-            {
                 hostname: "local-portfolio-bucket.s3.us-east-1.amazonaws.com",
             },
             {

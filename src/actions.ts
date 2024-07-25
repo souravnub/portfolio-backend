@@ -68,6 +68,49 @@ export async function createProjectAction(
     }
 }
 
+export async function udpateProjectAction({
+    id,
+    data,
+}: {
+    id: number;
+    data: Prisma.ProjectUpdateInput;
+}) {
+    await prisma.project.update({
+        where: {
+            id,
+        },
+        data,
+    });
+    revalidatePath(`/projects/${id}/edit`);
+}
+
+export async function updateProjectInfo({
+    values,
+    projectId,
+}: {
+    values: z.infer<typeof ProjectFormSchema>;
+    projectId: number;
+}) {
+    const parsed = ProjectFormSchema.safeParse(values);
+    if (!parsed.success) {
+        return { success: false, message: "Invalid inputs" };
+    }
+
+    const requierdData = {
+        ...parsed.data,
+        techUsed: parsed.data.techUsed.map((e) => e.value),
+    };
+
+    await prisma.project.update({
+        where: {
+            id: projectId,
+        },
+        data: requierdData,
+    });
+
+    revalidatePath(`/projects/${projectId}/edit`);
+    return { success: true, message: "Project Updated Successfully" };
+}
 export async function updateHomePageImage(newImageUrl: string) {
     const homePageContentStore = await prisma.homePageContent.findFirst({
         select: { id: true },

@@ -5,7 +5,7 @@ export const ALLOWED_IMAGE_FILE_TYPES = [
     "image/png",
     "image/avif",
 ];
-export const ALLOWED_VIDEO_FILE_TYPES = ["video/mp4", "video/mkv"];
+export const ALLOWED_VIDEO_FILE_TYPES = ["video/mp4", "video/x-matroska"];
 
 export const computeSHA256 = async (file: File) => {
     const buffer = await file.arrayBuffer();

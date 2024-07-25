@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
     FormControl,
@@ -19,6 +21,7 @@ import { z } from "zod";
 interface ProjectFormProps {
     onFormSubmit: (values: z.infer<typeof ProjectFormSchema>) => Promise<void>;
     defaultValues?: z.infer<typeof ProjectFormSchema>;
+    disableSubmitAfterFirstSubmission?: boolean;
 }
 
 const EMPTY_FORM_VALUES = {
@@ -37,6 +40,7 @@ const EMPTY_FORM_VALUES = {
 const ProjectForm = ({
     onFormSubmit,
     defaultValues = EMPTY_FORM_VALUES,
+    disableSubmitAfterFirstSubmission = false,
 }: ProjectFormProps) => {
     const form = useForm<z.infer<typeof ProjectFormSchema>>({
         resolver: zodResolver(ProjectFormSchema),
@@ -259,7 +263,9 @@ const ProjectForm = ({
 
                 <Button
                     disabled={
-                        isSubmitting || (isSubmitSuccessful ? true : false)
+                        isSubmitting ||
+                        (disableSubmitAfterFirstSubmission &&
+                            (isSubmitSuccessful ? true : false))
                     }
                     type="submit"
                     className="w-fit px-9 mt-6">

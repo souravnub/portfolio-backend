@@ -6,7 +6,6 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { ProjectFormSchema } from "@/schemas";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { MdInfo } from "react-icons/md";
 import { z } from "zod";
 // adding the images is not supported in adding a new project
@@ -69,7 +68,7 @@ const NewProjectPage = () => {
             if (time < 0) {
                 dismissRedirectToast();
                 clearInterval(interval);
-                router.push(`/projects/edit/${res.projectId}`);
+                router.push(`/projects/${res.projectId}/edit`);
             }
         }, 1000);
     }
@@ -88,7 +87,10 @@ const NewProjectPage = () => {
                     </p>
                 </div>
             </div>
-            <ProjectForm onFormSubmit={(values) => handleFormSubmit(values)} />
+            <ProjectForm
+                disableSubmitAfterFirstSubmission={true}
+                onFormSubmit={(values) => handleFormSubmit(values)}
+            />
         </>
     );
 };

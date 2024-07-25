@@ -1,9 +1,15 @@
 "use client";
 import { generateSignedUrl } from "@/actions";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
+import { FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import {
     ALLOWED_IMAGE_FILE_TYPES,
@@ -13,7 +19,7 @@ import {
 } from "@/lib/utils/fileUtils";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-import { MdImage, MdVideoFile } from "react-icons/md";
+import { MdImage, MdInfo, MdInfoOutline, MdVideoFile } from "react-icons/md";
 
 const Preview = ({
     preview,
@@ -26,7 +32,7 @@ const Preview = ({
 }) => {
     if (!preview) {
         return (
-            <div className="text-primary/30 bg-muted/40 w-full h-full grid place-content-center place-items-center gap-2">
+            <div className="text-primary/30 bg-muted-foreground/10 w-full h-full grid place-content-center place-items-center gap-2 py-10 cursor-pointer">
                 {assetType === "image" ? (
                     <MdImage className="text-6xl" />
                 ) : (
@@ -74,6 +80,7 @@ const Preview = ({
 const FileUpload = ({
     id,
     label,
+    description,
     width,
     fileSource = null,
     saveFileInDbAction,
@@ -82,6 +89,7 @@ const FileUpload = ({
     id: string;
     width: number;
     label: string;
+    description?: string;
     aspectRatio?: number;
     fileSource?: string | null;
     assetType: "video" | "image";
@@ -161,7 +169,26 @@ const FileUpload = ({
     return (
         <div className="relative space-y-2 w-fit">
             <div className="flex items-center mb-2">
-                <Label htmlFor={id}>{label}</Label>
+                <div>
+                    {!description && <Label htmlFor={id}>{label}</Label>}
+                    {description && (
+                        <TooltipProvider delayDuration={50}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Label
+                                        htmlFor={id}
+                                        className="flex gap-1 items-center">
+                                        <span>{label}</span>
+                                        <MdInfoOutline />
+                                    </Label>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{description}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
+                </div>
                 {/* Undo and save comp */}
                 {file && (
                     <div className="ml-auto space-x-3">
@@ -196,7 +223,7 @@ const FileUpload = ({
                     </div>
                 )}
             </div>
-            <Label htmlFor={id}>
+            <Label htmlFor={id} className="block mx-auto" style={{ width }}>
                 <Preview
                     assetType={assetType}
                     preview={preview}
@@ -212,7 +239,7 @@ const FileUpload = ({
                     accept={
                         assetType == "image"
                             ? ALLOWED_IMAGE_FILE_TYPES.join(",")
-                            : ALLOWED_VIDEO_FILE_TYPES.join(",")
+                            : ALLOWED_VIDEO_FILE_TYPES.join(",") + ", .mkv"
                     }
                     className="hover:bg-muted/40 cursor-pointer"
                     multiple={false}
