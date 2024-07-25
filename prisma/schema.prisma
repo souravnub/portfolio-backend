@@ -39,6 +39,8 @@ model Project {
   mobileImageUrl1 String?
   mobileImageUrl2 String?
   mobileVideoUrl String?
+  tabletVideoUrl String?
+  tabletImageUrl String?
 
   productionLink String
   githubLink String
