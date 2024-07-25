@@ -116,7 +116,7 @@ const NewProjectPage = () => {
         <>
             <div className="py-16">
                 <h1 className="font-medium text-4xl">
-                    New Project? Let's do it
+                    New Project? Let&apos;s do it
                 </h1>
                 <div className="mt-1 flex items-center gap-1">
                     <MdInfo className="text-xl text-blue-500" />
