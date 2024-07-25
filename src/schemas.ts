@@ -13,7 +13,7 @@ export const HomePageContentSchema = z.object({
         .min(2, { message: "Description should be atleast 2 characters" }),
 });
 
-export const newProjectFormSchema = z.object({
+export const ProjectFormSchema = z.object({
     name: z.string().min(1, "Project name is required"),
     role: z.string().min(1, "Role is required"),
     yearOfProduction: z

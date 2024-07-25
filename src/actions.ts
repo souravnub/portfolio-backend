@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "./db";
-import { HomePageContentSchema, newProjectFormSchema } from "./schemas";
+import { HomePageContentSchema, ProjectFormSchema } from "./schemas";
 import { auth } from "./lib/auth";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -26,12 +26,12 @@ export async function deleteProject(
     };
 }
 export async function createProjectAction(
-    values: z.infer<typeof newProjectFormSchema>
+    values: z.infer<typeof ProjectFormSchema>
 ): Promise<
     | { success: false; message: string }
     | { success: true; projectId: number; message: string }
 > {
-    const zodParseRes = newProjectFormSchema.safeParse(values);
+    const zodParseRes = ProjectFormSchema.safeParse(values);
 
     if (!zodParseRes.success) {
         return { success: false, message: "Invalid inputs" };
