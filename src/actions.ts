@@ -6,7 +6,6 @@ import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "./db";
-import { auth } from "./lib/auth";
 import { s3Client } from "./lib/utils/awsUtils";
 import {
     ALLOWED_IMAGE_FILE_TYPES,
@@ -111,6 +110,40 @@ export async function updateProjectAction({
         };
     } catch (err) {
         return { success: false, message: "Error while updating data in DB" };
+    }
+}
+
+export async function toggleProjectPublication({
+    id,
+    currentPublicationStatus,
+}: {
+    id: number;
+    currentPublicationStatus: "published" | "not-published";
+}) {
+    const { isAuthorized } = await authorizeUser();
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+    try {
+        const project = await prisma.project.update({
+            where: {
+                id,
+            },
+            data: {
+                isPublished:
+                    currentPublicationStatus === "published" ? false : true,
+            },
+        });
+
+        revalidatePath("/projects");
+        return {
+            success: true,
+            message: `Project ${
+                project.isPublished ? "published" : "dropped"
+            } successfully`,
+        };
+    } catch (err) {
+        return { success: false, message: "Error while updating DB" };
     }
 }
 

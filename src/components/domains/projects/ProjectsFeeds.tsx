@@ -31,6 +31,7 @@ const ProjectsFeed = async ({ query }: { query?: string }) => {
             githubLink: true,
             productionLink: true,
             name: true,
+            isPublished: true,
         },
     });
 
