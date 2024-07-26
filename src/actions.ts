@@ -189,7 +189,7 @@ export async function updateHomePageImage(newImageUrl: string) {
     const { isAuthorized } = await authorizeUser();
 
     if (!isAuthorized) {
-        return { success: false };
+        return { success: false, message: "Not authorized" };
     }
     const homePageContentStore = await prisma.homePageContent.findFirst({
         select: { id: true },
