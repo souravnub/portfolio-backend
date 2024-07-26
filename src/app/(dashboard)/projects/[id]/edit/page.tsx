@@ -1,4 +1,4 @@
-import { udpateProjectAction } from "@/actions";
+import { updateProjectAction } from "@/actions";
 import FileUpload from "@/components/domains/content/FileUpload";
 import EditProjectForm from "@/components/domains/projects/forms/EditProjectForm";
 import prisma from "@/db";
@@ -49,12 +49,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.brandImageUrl}
                         saveFileInDbAction={async (newImageUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     brandImageUrl: newImageUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                     <FileUpload
@@ -66,12 +67,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.brandNameImageUrl}
                         saveFileInDbAction={async (newImageUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     brandNameImageUrl: newImageUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                     <FileUpload
@@ -82,12 +84,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.videoUrl}
                         saveFileInDbAction={async (newVideoUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     videoUrl: newVideoUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                 </div>
@@ -101,12 +104,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.mobileImageUrl1}
                         saveFileInDbAction={async (newImageUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     mobileImageUrl1: newImageUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                     <FileUpload
@@ -117,12 +121,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.mobileVideoUrl}
                         saveFileInDbAction={async (newVideoUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     mobileVideoUrl: newVideoUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                     <FileUpload
@@ -133,12 +138,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.mobileImageUrl2}
                         saveFileInDbAction={async (newImageUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     mobileImageUrl2: newImageUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                 </div>
@@ -152,12 +158,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.tabletImageUrl}
                         saveFileInDbAction={async (newImageUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     tabletImageUrl: newImageUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                     <FileUpload
@@ -168,12 +175,13 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                         fileSource={defaultValues.tabletVideoUrl}
                         saveFileInDbAction={async (newVideoUrl) => {
                             "use server";
-                            udpateProjectAction({
+                            const res = updateProjectAction({
                                 id: defaultValues.id,
                                 data: {
                                     tabletVideoUrl: newVideoUrl,
                                 },
                             });
+                            return res;
                         }}
                     />
                 </div>

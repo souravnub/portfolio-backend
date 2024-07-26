@@ -1,7 +1,6 @@
 "use client";
 import { generateSignedUrl } from "@/actions";
 import { Button } from "@/components/ui/button";
-import { FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,8 +17,8 @@ import {
     getImageData,
 } from "@/lib/utils/fileUtils";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
-import { MdImage, MdInfo, MdInfoOutline, MdVideoFile } from "react-icons/md";
+import { useRef, useState } from "react";
+import { MdImage, MdInfoOutline, MdVideoFile } from "react-icons/md";
 
 const Preview = ({
     preview,
@@ -94,7 +93,9 @@ const FileUpload = ({
     fileSource?: string | null;
     assetType: "video" | "image";
 
-    saveFileInDbAction: (url: string) => Promise<void>;
+    saveFileInDbAction: (
+        url: string
+    ) => Promise<{ success: boolean; message: string }>;
 }) => {
     const { toast } = useToast();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -122,6 +123,24 @@ const FileUpload = ({
             toast({
                 variant: "destructive",
                 description: signedUrlRes.message,
+            });
+            setIsUploading(false);
+            return;
+        }
+
+        // 1. save the url in DB
+        // 2. if update in DB is successfull, then add the files to aws
+        const newFileUrl = signedUrlRes.url.split("?")[0];
+
+        toast({
+            description: "Updating file URL in DB",
+        });
+        const dbActionRes = await saveFileInDbAction(newFileUrl);
+
+        if (!dbActionRes.success) {
+            toast({
+                variant: "destructive",
+                description: dbActionRes.message,
             });
             setIsUploading(false);
             return;
@@ -157,9 +176,6 @@ const FileUpload = ({
         toast({
             description: "Successfully uploaded to S3",
         });
-
-        const newFileUrl = signedUrlRes.url.split("?")[0];
-        await saveFileInDbAction(newFileUrl);
 
         setIsUploading(false);
         setPreview(newFileUrl);

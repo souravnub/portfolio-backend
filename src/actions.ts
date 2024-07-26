@@ -23,12 +23,17 @@ export async function deleteProject(
 
     if (!projectId) return { success: false };
 
-    await prisma.project.delete({ where: { id: Number(projectId) } });
-    revalidatePath("/projects");
-
-    return {
-        success: true,
-    };
+    try {
+        await prisma.project.delete({ where: { id: Number(projectId) } });
+        revalidatePath("/projects");
+        return {
+            success: true,
+        };
+    } catch (err) {
+        return {
+            success: false,
+        };
+    }
 }
 export async function createProjectAction(
     values: z.infer<typeof ProjectFormSchema>
@@ -68,20 +73,28 @@ export async function createProjectAction(
     }
 }
 
-export async function udpateProjectAction({
+export async function updateProjectAction({
     id,
     data,
 }: {
     id: number;
     data: Prisma.ProjectUpdateInput;
 }) {
-    await prisma.project.update({
-        where: {
-            id,
-        },
-        data,
-    });
-    revalidatePath(`/projects/${id}/edit`);
+    try {
+        await prisma.project.update({
+            where: {
+                id,
+            },
+            data,
+        });
+        revalidatePath(`/projects/${id}/edit`);
+        return {
+            success: true,
+            message: "DB update successfull",
+        };
+    } catch (err) {
+        return { success: false, message: "Error while updating data in DB" };
+    }
 }
 
 export async function updateProjectInfo({
@@ -101,29 +114,41 @@ export async function updateProjectInfo({
         techUsed: parsed.data.techUsed.map((e) => e.value),
     };
 
-    await prisma.project.update({
-        where: {
-            id: projectId,
-        },
-        data: requierdData,
-    });
-
-    revalidatePath(`/projects/${projectId}/edit`);
-    return { success: true, message: "Project Updated Successfully" };
+    try {
+        await prisma.project.update({
+            where: {
+                id: projectId,
+            },
+            data: requierdData,
+        });
+        revalidatePath(`/projects/${projectId}/edit`);
+        return { success: true, message: "Project Updated Successfully" };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Error while updating project in DB",
+        };
+    }
 }
 export async function updateHomePageImage(newImageUrl: string) {
     const homePageContentStore = await prisma.homePageContent.findFirst({
         select: { id: true },
     });
-    await prisma.homePageContent.update({
-        where: {
-            id: homePageContentStore?.id,
-        },
-        data: {
-            mainImageUrl: newImageUrl,
-        },
-    });
-    revalidatePath("/content");
+    try {
+        await prisma.homePageContent.update({
+            where: {
+                id: homePageContentStore?.id,
+            },
+            data: {
+                mainImageUrl: newImageUrl,
+            },
+        });
+
+        revalidatePath("/content");
+        return { success: true, message: "Image upload successfull" };
+    } catch (err) {
+        return { success: false, message: "Error while updating DB" };
+    }
 }
 
 export async function updateHomePageContent(
@@ -149,21 +174,25 @@ export async function updateHomePageContent(
         return { success: false, message: "No storage object found in DB." };
     }
 
-    await prisma.homePageContent.update({
-        where: {
-            id: storageObj.id,
-        },
-        data: {
-            country,
-            role,
-            portfolio_slogan,
-            portfolio_description,
-        },
-    });
+    try {
+        await prisma.homePageContent.update({
+            where: {
+                id: storageObj.id,
+            },
+            data: {
+                country,
+                role,
+                portfolio_slogan,
+                portfolio_description,
+            },
+        });
 
-    revalidatePath("/content/");
+        revalidatePath("/content/");
 
-    return { success: true, message: "data updated Successfully!" };
+        return { success: true, message: "data updated Successfully!" };
+    } catch (err) {
+        return { success: false, message: "Error while updating data in DB" };
+    }
 }
 
 const MAX_FILE_SIZE = 1048576 * 10; // 1048576bytes = 1mb, therefore, 1mb * 10 = 10mb

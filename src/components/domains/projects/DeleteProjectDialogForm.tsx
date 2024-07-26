@@ -51,7 +51,7 @@ const DeleteProjectDialogForm = ({
             toast({
                 variant: "destructive",
                 title: "Error!!",
-                description: "There was an error while deleting the project",
+                description: "Error while deleting the project",
             });
         }
     }, [deleteProjectActionRes.success]);
