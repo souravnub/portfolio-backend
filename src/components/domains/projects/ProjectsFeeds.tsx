@@ -33,6 +33,9 @@ const ProjectsFeed = async ({ query }: { query?: string }) => {
             name: true,
             isPublished: true,
         },
+        orderBy: {
+            updatedAt: "desc",
+        },
     });
 
     if (projects.length === 0) {

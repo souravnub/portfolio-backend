@@ -30,7 +30,7 @@ const EMPTY_FORM_VALUES = {
     yearOfProduction: new Date().getFullYear().toString(),
     description: "",
     quote: "",
-    brandColor: "",
+    brandColor: "#000000",
     productionLink: "",
     githubLink: "",
     inSiteLinkText: "",
