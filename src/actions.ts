@@ -14,11 +14,18 @@ import {
     generateUniqueFileName,
 } from "./lib/utils/fileUtils";
 import { HomePageContentSchema, ProjectFormSchema } from "./schemas";
+import { authorizeUser } from "./lib/utils/authUtils";
 
 export async function deleteProject(
     prevState: any,
     formData: FormData
 ): Promise<{ success: boolean | null }> {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false };
+    }
+
     const projectId = formData.get("projectId") as string | undefined;
 
     if (!projectId) return { success: false };
@@ -41,6 +48,11 @@ export async function createProjectAction(
     | { success: false; message: string }
     | { success: true; projectId: number; message: string }
 > {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
     const zodParseRes = ProjectFormSchema.safeParse(values);
 
     if (!zodParseRes.success) {
@@ -80,6 +92,11 @@ export async function updateProjectAction({
     id: number;
     data: Prisma.ProjectUpdateInput;
 }) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
     try {
         await prisma.project.update({
             where: {
@@ -104,6 +121,11 @@ export async function updateProjectInfo({
     values: z.infer<typeof ProjectFormSchema>;
     projectId: number;
 }) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
     const parsed = ProjectFormSchema.safeParse(values);
     if (!parsed.success) {
         return { success: false, message: "Invalid inputs" };
@@ -131,6 +153,11 @@ export async function updateProjectInfo({
     }
 }
 export async function updateHomePageImage(newImageUrl: string) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false };
+    }
     const homePageContentStore = await prisma.homePageContent.findFirst({
         select: { id: true },
     });
@@ -154,6 +181,11 @@ export async function updateHomePageImage(newImageUrl: string) {
 export async function updateHomePageContent(
     formData: FormData
 ): Promise<{ success: boolean | null; message: string }> {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
     const data = Object.fromEntries(formData);
     const parsed = HomePageContentSchema.safeParse(data);
     if (!parsed.success) {
@@ -216,12 +248,10 @@ export async function generateSignedUrl({
     fileSize,
     checksum,
 }: GetSignedURLParams): Promise<GetSignedURLResult> {
-    const session = await auth();
-    if (!session) {
-        return {
-            success: false,
-            message: "not authenticated",
-        };
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
     }
     if (
         !ALLOWED_IMAGE_FILE_TYPES.concat(ALLOWED_VIDEO_FILE_TYPES).includes(
