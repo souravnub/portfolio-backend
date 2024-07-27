@@ -12,6 +12,7 @@ const ContentPage = async () => {
     return (
         <div>
             <FileUpload
+                objectKey="portfolio-image"
                 id="portfolio image"
                 width={500}
                 label="Portfolio Image"

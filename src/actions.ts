@@ -293,6 +293,7 @@ type GetSignedURLParams = {
     fileSize: number;
     checksum: string;
     objectDirectory?: string;
+    objectKey?: string;
 };
 type GetSignedURLResult =
     | {
@@ -308,6 +309,7 @@ export async function generateSignedUrl({
     fileSize,
     checksum,
     objectDirectory,
+    objectKey,
 }: GetSignedURLParams): Promise<GetSignedURLResult> {
     const { isAuthorized } = await authorizeUser();
 
@@ -331,10 +333,19 @@ export async function generateSignedUrl({
         };
     }
 
-    const fileKey =
-        objectDirectory !== undefined
-            ? objectDirectory + generateUniqueFileName()
-            : generateUniqueFileName();
+    let fileKey;
+
+    if (objectDirectory !== undefined) {
+        if (objectKey !== undefined) {
+            fileKey = objectDirectory + objectKey;
+        } else {
+            fileKey = objectDirectory + generateUniqueFileName();
+        }
+    } else if (objectDirectory === undefined && objectKey !== undefined) {
+        fileKey = objectKey;
+    } else {
+        fileKey = generateUniqueFileName();
+    }
 
     const command = new PutObjectCommand({
         ContentLength: fileSize,

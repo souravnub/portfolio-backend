@@ -42,6 +42,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                 <div className="bg-muted p-5 rounded-lg flex gap-10 flex-wrap justify-between">
                     <FileUpload
                         objectDirectory={`projects/${project.name}/`}
+                        objectKey="brand-image"
                         description="The Main image for a project"
                         id="brand image"
                         width={300}
@@ -61,6 +62,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     />
                     <FileUpload
                         objectDirectory={`projects/${project.name}/`}
+                        objectKey="brand-name-image"
                         id="brand name image"
                         description="The name of the project that is placed inside the brand image"
                         width={300}
@@ -81,6 +83,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     <FileUpload
                         id="macvideo"
                         objectDirectory={`projects/${project.name}/`}
+                        objectKey="macbook-video"
                         width={300}
                         label={"Macbook video"}
                         assetType="video"
@@ -101,6 +104,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                 <div className="flex justify-between gap-10 flex-wrap rounded-lg p-5">
                     <FileUpload
                         id="mobileimage1"
+                        objectKey="mobile-image-1"
                         objectDirectory={`projects/${project.name}/mobileAssets/`}
                         width={200}
                         label={"Mobile image 1"}
@@ -120,6 +124,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     <FileUpload
                         id="mobilevideo"
                         objectDirectory={`projects/${project.name}/mobileAssets/`}
+                        objectKey="mobile-video"
                         width={200}
                         label={"Mobile Video"}
                         assetType="video"
@@ -138,6 +143,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     <FileUpload
                         id="mobile image 2"
                         objectDirectory={`projects/${project.name}/mobileAssets`}
+                        objectKey="mobile-image-2"
                         width={200}
                         label={"Mobile image 2"}
                         assetType="image"
@@ -159,6 +165,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     <FileUpload
                         id="tablet image"
                         objectDirectory={`projects/${project.name}/tabletAssets/`}
+                        objectKey="tablet-image"
                         width={400}
                         label={"Table Image"}
                         assetType="image"
@@ -177,6 +184,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     <FileUpload
                         id="tablet video"
                         objectDirectory={`projects/${project.name}/tabletAssets/`}
+                        objectKey="tablet-video"
                         width={400}
                         label={"Table Video"}
                         assetType="video"

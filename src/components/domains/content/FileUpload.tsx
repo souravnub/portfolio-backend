@@ -84,6 +84,7 @@ const FileUpload = ({
     fileSource = null,
     saveFileInDbAction,
     objectDirectory = undefined,
+    objectKey = undefined,
     assetType,
 }: {
     id: string;
@@ -94,6 +95,7 @@ const FileUpload = ({
     fileSource?: string | null;
     assetType: "video" | "image";
     objectDirectory?: string;
+    objectKey?: string;
 
     saveFileInDbAction: (
         url: string
@@ -120,6 +122,7 @@ const FileUpload = ({
             fileType: file.type,
             checksum,
             objectDirectory,
+            objectKey,
         });
 
         if (!signedUrlRes.success) {
@@ -133,7 +136,10 @@ const FileUpload = ({
 
         // 1. save the url in DB
         // 2. if update in DB is successfull, then add the files to aws
-        const newFileUrl = signedUrlRes.url.split("?")[0];
+        // appended getTime() in the image url, because we want the next Image not to show us the cached image.
+        // The url in DB will be changed, therefore when the page will be revalidated a new image url will be present, Therefore no cached image
+        const newFileUrl =
+            signedUrlRes.url.split("?")[0] + "?" + new Date().getTime();
 
         toast({
             description: "Updating file URL in DB",
