@@ -142,7 +142,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                     />
                     <FileUpload
                         id="mobile image 2"
-                        objectDirectory={`projects/${project.name}/mobileAssets`}
+                        objectDirectory={`projects/${project.name}/mobileAssets/`}
                         objectKey="mobile-image-2"
                         width={200}
                         label={"Mobile image 2"}
