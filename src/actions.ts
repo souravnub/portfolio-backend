@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "./db";
-import { s3Client } from "./lib/utils/awsUtils";
+import { clearDirectory, s3Client } from "./lib/utils/awsUtils";
 import {
     ALLOWED_IMAGE_FILE_TYPES,
     ALLOWED_VIDEO_FILE_TYPES,
@@ -15,29 +15,55 @@ import {
 import { HomePageContentSchema, ProjectFormSchema } from "./schemas";
 import { authorizeUser } from "./lib/utils/authUtils";
 
-export async function deleteProject(
-    prevState: any,
-    formData: FormData
-): Promise<{ success: boolean | null }> {
+export async function deleteProject(formData: FormData): Promise<{
+    success: boolean | null;
+    warning?: boolean | null;
+    warningMsg?: string;
+    message: string;
+}> {
     const { isAuthorized } = await authorizeUser();
 
     if (!isAuthorized) {
-        return { success: false };
+        return { success: false, message: "Not authorized" };
     }
 
     const projectId = formData.get("projectId") as string | undefined;
 
-    if (!projectId) return { success: false };
+    if (!projectId) return { success: false, message: "Project not found" };
 
     try {
-        await prisma.project.delete({ where: { id: Number(projectId) } });
+        const deletedProject = await prisma.project.delete({
+            where: { id: Number(projectId) },
+        });
         revalidatePath("/projects");
+
+        // TODO: what if no directory
+        // delete all aws assets of the project
+        const clearDirRes = await clearDirectory(
+            `projects/${deletedProject.name}/`
+        );
+
+        if (!clearDirRes.success) {
+            return {
+                success: true,
+                warning: true,
+                warningMsg:
+                    "Error while removing assets from AWS" +
+                    `. Warning: ${clearDirRes.message}`,
+                message: "Project Deleted from DB",
+            };
+        }
+
+        console.log("aws res", clearDirRes);
+
         return {
             success: true,
+            message: `Project deleted Successfully! Deleted ${clearDirRes.deletedObjects.length} related assets.`,
         };
     } catch (err) {
         return {
             success: false,
+            message: "Error while deleting project",
         };
     }
 }
@@ -266,6 +292,7 @@ type GetSignedURLParams = {
     fileType: string;
     fileSize: number;
     checksum: string;
+    objectDirectory?: string;
 };
 type GetSignedURLResult =
     | {
@@ -280,6 +307,7 @@ export async function generateSignedUrl({
     fileType,
     fileSize,
     checksum,
+    objectDirectory,
 }: GetSignedURLParams): Promise<GetSignedURLResult> {
     const { isAuthorized } = await authorizeUser();
 
@@ -303,11 +331,16 @@ export async function generateSignedUrl({
         };
     }
 
+    const fileKey =
+        objectDirectory !== undefined
+            ? objectDirectory + generateUniqueFileName()
+            : generateUniqueFileName();
+
     const command = new PutObjectCommand({
         ContentLength: fileSize,
         ContentType: fileType,
         ChecksumSHA256: checksum,
-        Key: generateUniqueFileName(),
+        Key: fileKey,
         Bucket: process.env.AWS_BUCKET_NAME,
     });
 
@@ -320,4 +353,9 @@ export async function generateSignedUrl({
             message: "Error while generating signed url.",
         };
     }
+}
+
+export async function runCommand() {
+    const c = await clearDirectory("projects/");
+    console.log(c);
 }

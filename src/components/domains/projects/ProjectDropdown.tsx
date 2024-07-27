@@ -29,12 +29,14 @@ const ProjectDropdown = ({
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="p-1.5 h-min">
+                    <Button variant="outline" className="p-1.5  h-min">
                         <DotsHorizontalIcon />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="p-2 rounded-xl">
-                    <DropdownMenuItem className="rounded-lg py-2">
+                <DropdownMenuContent
+                    align="center"
+                    className="p-2  rounded-xl space-y-1">
+                    <DropdownMenuItem className="rounded-lg ">
                         <Link
                             href={`/projects/${projectId}/edit`}
                             className="flex justify-between w-full items-center">
@@ -45,13 +47,13 @@ const ProjectDropdown = ({
                         </Link>
                     </DropdownMenuItem>
                     <DialogTrigger asChild>
-                        <DropdownMenuItem className="py-2 rounded-lg">
-                            <span className="flex justify-between items-center w-full">
+                        <DropdownMenuItem className=" rounded-lg">
+                            <button className="flex  justify-between items-center w-full">
                                 Delete
                                 <DropdownMenuShortcut className="text-base">
                                     <AiFillDelete />
                                 </DropdownMenuShortcut>
-                            </span>
+                            </button>
                         </DropdownMenuItem>
                     </DialogTrigger>
                 </DropdownMenuContent>

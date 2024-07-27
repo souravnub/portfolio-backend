@@ -83,6 +83,7 @@ const FileUpload = ({
     width,
     fileSource = null,
     saveFileInDbAction,
+    objectDirectory = undefined,
     assetType,
 }: {
     id: string;
@@ -92,6 +93,7 @@ const FileUpload = ({
     aspectRatio?: number;
     fileSource?: string | null;
     assetType: "video" | "image";
+    objectDirectory?: string;
 
     saveFileInDbAction: (
         url: string
@@ -117,6 +119,7 @@ const FileUpload = ({
             fileSize: file.size,
             fileType: file.type,
             checksum,
+            objectDirectory,
         });
 
         if (!signedUrlRes.success) {

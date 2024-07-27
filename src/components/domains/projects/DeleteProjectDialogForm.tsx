@@ -4,21 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-
-function DeleteProjectButton({ isInpValid }: { isInpValid: boolean }) {
-    const { pending } = useFormStatus();
-    return (
-        <Button
-            type="submit"
-            variant={"destructive"}
-            disabled={!isInpValid || pending}
-            className="w-full mt-3 border">
-            {pending ? "Deleting..." : "Delete project"}
-        </Button>
-    );
-}
 
 const DeleteProjectDialogForm = ({
     projectId,
@@ -31,30 +18,9 @@ const DeleteProjectDialogForm = ({
 }) => {
     const [val, setVal] = useState("");
     const [isInpValid, setIsInpValid] = useState(false);
-    const [deleteProjectActionRes, deleteProjectAction] = useFormState(
-        deleteProject,
-        {
-            success: null,
-        }
-    );
-    const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if (deleteProjectActionRes.success === true) {
-            toast({
-                variant: "default",
-                title: "Project deleted",
-                description: "Project had been deleted successfully",
-            });
-            setIsDialogOpen(false);
-        } else if (deleteProjectActionRes.success === false) {
-            toast({
-                variant: "destructive",
-                title: "Error!!",
-                description: "Error while deleting the project",
-            });
-        }
-    }, [deleteProjectActionRes.success]);
+    const { toast } = useToast();
 
     useEffect(() => {
         if (val.trim() === projectName.trim()) {
@@ -64,8 +30,43 @@ const DeleteProjectDialogForm = ({
         }
     }, [val]);
 
+    async function handleFormSubmit(e: FormEvent) {
+        e.preventDefault();
+        setIsLoading(true);
+        const formData = new FormData(e.target as HTMLFormElement);
+
+        const { success, warning, warningMsg, message } = await deleteProject(
+            formData
+        );
+
+        if (!success) {
+            toast({
+                title: "Error!!",
+                description: message,
+            });
+        } else if (success && !warning) {
+            toast({
+                title: "Project Deleted!!",
+                description: message,
+            });
+        } else if (success && warning) {
+            toast({
+                title: "Project Deleted!!",
+                description: message,
+            });
+            toast({
+                title: "Warning!!",
+                variant: "destructive",
+                description: warningMsg,
+            });
+        }
+
+        setIsLoading(false);
+        setIsDialogOpen(false);
+    }
+
     return (
-        <form className="mt-4" action={deleteProjectAction}>
+        <form className="mt-4" onSubmit={handleFormSubmit}>
             <Label htmlFor={`dialog-delete-${projectId}`}>
                 To confirm, type &ldquo;{projectName}&rdquo; in the input below
             </Label>
@@ -79,7 +80,13 @@ const DeleteProjectDialogForm = ({
                         : "outline-destructive ring-destructive border-destructive  focus-visible:ring-destructive"
                 }`}
                 onChange={(e) => setVal(e.target.value)}></Input>
-            <DeleteProjectButton isInpValid={isInpValid} />
+            <Button
+                type="submit"
+                variant={"destructive"}
+                disabled={!isInpValid || isLoading}
+                className="w-full mt-3 border">
+                {isLoading ? "Deleting..." : "Delete project"}
+            </Button>
         </form>
     );
 };
