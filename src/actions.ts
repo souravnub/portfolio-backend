@@ -366,7 +366,36 @@ export async function generateSignedUrl({
     }
 }
 
-export async function runCommand() {
-    const c = await clearDirectory("projects/");
-    console.log(c);
+export async function haveRepliedToMessage({
+    messageId,
+    replied,
+}: {
+    messageId: number;
+    replied: boolean;
+}) {
+    const { isAuthorized } = await authorizeUser();
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+    try {
+        await prisma.message.update({
+            where: {
+                id: messageId,
+            },
+            data: {
+                replied,
+            },
+        });
+
+        revalidatePath("/messages");
+        return {
+            success: true,
+            message: `Message updated successfully!!`,
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Error while updating message status",
+        };
+    }
 }

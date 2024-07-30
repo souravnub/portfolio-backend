@@ -47,7 +47,11 @@ const ProjectCard = ({ project }: { project: Project }) => {
                             } w-2.5 h-2.5 mt-2  rounded-full`}></div>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>{isPublished ? "Published" : "Not Published"}</p>
+                        <p>
+                            {isPublished
+                                ? "The project is public!!"
+                                : "Not publically visible in the portfolio"}
+                        </p>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>

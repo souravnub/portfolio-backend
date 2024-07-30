@@ -7,6 +7,7 @@ const Links = [
     { id: 1, title: "Overview", href: "/" },
     { id: 2, title: "Content", href: "/content" },
     { id: 3, title: "Projects", href: "/projects" },
+    { id: 4, title: "Messages", href: "/messages" },
 ];
 
 const Appbar = () => {

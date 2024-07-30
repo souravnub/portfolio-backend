@@ -68,3 +68,12 @@ model HomePageContent {
   portfolio_slogan String
   portfolio_description String
 }
+
+model message {
+  id Int @id @default(autoincrement())
+  name String
+  email String
+  message String
+  createdAt DateTime @default(now())
+  replied Boolean @default(false)
+}
