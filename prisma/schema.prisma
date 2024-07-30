@@ -76,4 +76,5 @@ model message {
   message String
   createdAt DateTime @default(now())
   replied Boolean @default(false)
+  isDeleted Boolean @default(false)
 }

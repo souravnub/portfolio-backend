@@ -399,3 +399,31 @@ export async function haveRepliedToMessage({
         };
     }
 }
+
+export async function deleteMessage(messageId: number, formData: FormData) {
+    const { isAuthorized } = await authorizeUser();
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+
+    try {
+        await prisma.message.update({
+            where: {
+                id: messageId,
+            },
+            data: {
+                isDeleted: true,
+            },
+        });
+        revalidatePath("/messages");
+        return {
+            success: true,
+            message: "Message deleted successfully!!",
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Error while deleting message",
+        };
+    }
+}
