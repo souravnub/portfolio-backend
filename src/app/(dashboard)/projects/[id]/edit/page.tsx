@@ -38,12 +38,33 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
 
     return (
         <div className="space-y-16">
+            <FileUpload
+                objectDirectory={`projects/${project.name}/`}
+                objectKey="main-image"
+                description="The main image that will used for the project"
+                id="main-image"
+                width={400}
+                label="main image"
+                assetType="image"
+                fileSource={defaultValues.image}
+                saveFileInDbAction={async (newImageUrl) => {
+                    "use server";
+                    const res = updateProjectAction({
+                        id: defaultValues.id,
+                        data: {
+                            image: newImageUrl,
+                        },
+                    });
+                    return res;
+                }}
+            />
+
             <div className=" space-y-12">
                 <div className="bg-muted p-5 rounded-lg flex gap-10 flex-wrap justify-between">
                     <FileUpload
                         objectDirectory={`projects/${project.name}/`}
                         objectKey="brand-image"
-                        description="The Main image for a project"
+                        description="The image that would related the project to the users"
                         id="brand image"
                         width={300}
                         label="Brand image"

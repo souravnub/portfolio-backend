@@ -5,137 +5,35 @@ const prisma = new PrismaClient();
 async function main() {
     const projects = [
         {
-            name: "Project One",
-            role: "Lead Developer",
-            image: "project1.jpg",
-            yearOfProduction: "2022",
-            techUsed: ["JavaScript", "React", "Node.js"],
-            description: "A web application built with React and Node.js.",
-            skillsEnhanced: {
-                create: [
-                    {
-                        name: "JavaScript",
-                        description: "Improved proficiency in JavaScript.",
-                    },
-                    {
-                        name: "React",
-                        description: "Enhanced skills in React development.",
-                    },
-                ],
-            },
-            quote: "This project was a game-changer for our team.",
-            brandColor: "#FF5733",
-            brandImageUrl: "brand1.jpg",
-            brandNameImageUrl: "brandName1.jpg",
-            videoUrl: "video1.mp4",
-            mobileImageUrl1: "mobile1_1.jpg",
-            mobileImageUrl2: "mobile1_2.jpg",
-            mobileVideoUrl: "mobileVideo1.mp4",
-            productionLink: "https://project1.com",
-            githubLink: "https://github.com/project1",
-            inSiteLinkText: "Project One Link",
-        },
-        {
-            name: "Project Two",
-            role: "Backend Developer",
-            image: "project2.jpg",
-            yearOfProduction: "2021",
-            techUsed: ["Python", "Django", "PostgreSQL"],
-            description: "A backend system built with Django and PostgreSQL.",
-            skillsEnhanced: {
-                create: [
-                    {
-                        name: "Python",
-                        description: "Improved proficiency in Python.",
-                    },
-                    {
-                        name: "Django",
-                        description: "Enhanced skills in Django development.",
-                    },
-                ],
-            },
-            quote: "A robust and scalable backend solution.",
-            brandColor: "#33FF57",
-            brandImageUrl: "brand2.jpg",
-            brandNameImageUrl: "brandName2.jpg",
-            videoUrl: "video2.mp4",
-            mobileImageUrl1: "mobile2_1.jpg",
-            mobileImageUrl2: "mobile2_2.jpg",
-            mobileVideoUrl: "mobileVideo2.mp4",
-            productionLink: "https://project2.com",
-            githubLink: "https://github.com/project2",
-            inSiteLinkText: "Project Two Link",
-        },
-        {
-            name: "Project Three",
-            role: "Full Stack Developer",
-            image: "project3.jpg",
-            yearOfProduction: "2023",
-            techUsed: ["Java", "Spring Boot", "MySQL"],
-            description:
-                "An enterprise application built with Spring Boot and MySQL.",
-            skillsEnhanced: {
-                create: [
-                    {
-                        name: "Java",
-                        description: "Improved proficiency in Java.",
-                    },
-                    {
-                        name: "Spring Boot",
-                        description:
-                            "Enhanced skills in Spring Boot development.",
-                    },
-                ],
-            },
-            quote: "Delivering enterprise-level solutions.",
-            brandColor: "#3357FF",
-            brandImageUrl: "brand3.jpg",
-            brandNameImageUrl: "brandName3.jpg",
-            videoUrl: "video3.mp4",
-            mobileImageUrl1: "mobile3_1.jpg",
-            mobileImageUrl2: "mobile3_2.jpg",
-            mobileVideoUrl: "mobileVideo3.mp4",
-            productionLink: "https://project3.com",
-            githubLink: "https://github.com/project3",
-            inSiteLinkText: "Project Three Link",
-        },
-        {
-            name: "Project Four",
-            role: "Frontend Developer",
-            image: "project4.jpg",
-            yearOfProduction: "2020",
-            techUsed: ["HTML", "CSS", "JavaScript"],
-            description:
-                "A responsive website built with HTML, CSS, and JavaScript.",
-            skillsEnhanced: {
-                create: [
-                    {
-                        name: "HTML",
-                        description: "Improved proficiency in HTML.",
-                    },
-                    { name: "CSS", description: "Enhanced skills in CSS." },
-                ],
-            },
-            quote: "A stunning and responsive web design.",
-            brandColor: "#FF33A5",
-            brandImageUrl: "brand4.jpg",
-            brandNameImageUrl: "brandName4.jpg",
-            videoUrl: "video4.mp4",
-            mobileImageUrl1: "mobile4_1.jpg",
-            mobileImageUrl2: "mobile4_2.jpg",
-            mobileVideoUrl: "mobileVideo4.mp4",
-            productionLink: "https://project4.com",
-            githubLink: "https://github.com/project4",
-            inSiteLinkText: "Project Four Link",
-        },
-        {
-            name: "Project Five",
-            role: "DevOps Engineer",
-            image: "project5.jpg",
-            yearOfProduction: "2019",
-            techUsed: ["Docker", "Kubernetes", "AWS"],
-            description:
-                "A DevOps pipeline built with Docker, Kubernetes, and AWS.",
+            name: "S Mart",
+            role: "development & design",
+            image: null,
+            yearOfProduction: "2024",
+            techUsed: ["reactjs", "scss", "axios"],
+            description: "This is smart project, a shopping website ",
+            quote: "The smart website",
+            brandColor: "#58c0d5",
+            brandImageUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/brand-image?1722052269054",
+            brandNameImageUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/brand-name-image?1722052282702",
+            videoUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/macbook-video?1722052324184",
+            mobileImageUrl1:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/mobileAssets/mobile-image-1?1722052362449",
+            mobileImageUrl2:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/mobileAssetsmobile-image-2?1722052359335",
+            mobileVideoUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/mobileAssets/mobile-video?1722052370294",
+            productionLink: "https://smart-shopping-website.netlify.app/",
+            githubLink:
+                "https://github.com/souravnub/smart-shopping-website-frontend",
+            inSiteLinkText: "/smart",
+            tabletImageUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/tabletAssets/tablet-image?1722052430560",
+            tabletVideoUrl:
+                "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/tabletAssets/tablet-video?1722052438453",
+
             skillsEnhanced: {
                 create: [
                     {
@@ -148,17 +46,6 @@ async function main() {
                     },
                 ],
             },
-            quote: "Streamlined our deployment process.",
-            brandColor: "#A533FF",
-            brandImageUrl: "brand5.jpg",
-            brandNameImageUrl: "brandName5.jpg",
-            videoUrl: "video5.mp4",
-            mobileImageUrl1: "mobile5_1.jpg",
-            mobileImageUrl2: "mobile5_2.jpg",
-            mobileVideoUrl: "mobileVideo5.mp4",
-            productionLink: "https://project5.com",
-            githubLink: "https://github.com/project5",
-            inSiteLinkText: "Project Five Link",
         },
     ];
 
