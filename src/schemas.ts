@@ -31,7 +31,7 @@ export const ProjectFormSchema = z.object({
     brandColor: z
         .string()
         .length(7, "Hex color code is supposed to be 7 characters"),
+
     productionLink: z.string().url({ message: "invalid url" }),
-    githubLink: z.string().url({ message: "invalid url" }),
-    inSiteLinkText: z.string().min(1, "In Site Link cannot be empty"),
+    githubLink: z.union([z.literal(""), z.string().trim().url()]),
 });

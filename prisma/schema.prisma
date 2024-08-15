@@ -43,8 +43,7 @@ model Project {
   tabletImageUrl String?
 
   productionLink String
-  githubLink String
-  inSiteLinkText String //remove this afterwards
+  githubLink String?
 
   isPublished Boolean @default(false)
 

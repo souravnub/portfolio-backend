@@ -10,6 +10,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { ProjectFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +34,6 @@ const EMPTY_FORM_VALUES = {
     brandColor: "#000000",
     productionLink: "",
     githubLink: "",
-    inSiteLinkText: "",
     techUsed: [{ value: "" }],
 };
 
@@ -138,31 +138,55 @@ const ProjectForm = ({
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="brandColor"
-                    render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                            <FormLabel>Brand Color</FormLabel>
-                            <div className="flex flex-col ">
-                                <span className="font-medium text-sm text-primary/40">
-                                    {field.value}
-                                </span>
-                                <FormLabel className="inline-block w-fit">
-                                    <div
-                                        className="border-border border-2 w-20 aspect-[2/1] rounded-lg"
-                                        style={{
-                                            backgroundColor: field.value,
-                                        }}></div>
-                                </FormLabel>
+                <div className="flex gap-10">
+                    <FormField
+                        control={form.control}
+                        name="brandColor"
+                        render={({ field }) => (
+                            <FormItem className="md:col-span-2">
+                                <FormLabel>Brand Color</FormLabel>
+                                <div className="flex flex-col ">
+                                    <FormLabel className="inline-block w-fit">
+                                        <div
+                                            className="border-border border-2 w-20 aspect-[2/1] rounded-lg"
+                                            style={{
+                                                backgroundColor: field.value,
+                                            }}></div>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            type="color"
+                                            hidden={true}
+                                            className="invisible h-0 w-0"
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Separator orientation="vertical"></Separator>
+
+                    <FormField
+                        control={form.control}
+                        name="brandColor"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Hex&#35;</FormLabel>
                                 <FormControl>
-                                    <input {...field} type="color" hidden />
+                                    <Input
+                                        {...field}
+                                        type="text"
+                                        className="w-fit"
+                                    />
                                 </FormControl>
-                            </div>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
                 <div className="md:flex md:col-span-2 md:gap-3">
                     <FormField
@@ -188,23 +212,6 @@ const ProjectForm = ({
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="inSiteLinkText"
-                        render={({ field }) => (
-                            <FormItem className="md:flex-1">
-                                <FormLabel>Portfolio project URL</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    The link to the project in the portfolio
-                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
