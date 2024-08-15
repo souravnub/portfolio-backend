@@ -34,6 +34,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
         ...project,
         techUsed: project?.techUsed.map((e) => ({ value: e })),
         quote: project.quote === null ? undefined : project.quote,
+        githubLink: project.githubLink === null ? "" : project.githubLink,
     };
 
     return (

@@ -24,15 +24,6 @@ const ProjectsFeed = async ({ query }: { query?: string }) => {
                 },
             ],
         },
-        select: {
-            id: true,
-            description: true,
-            yearOfProduction: true,
-            githubLink: true,
-            productionLink: true,
-            name: true,
-            isPublished: true,
-        },
         orderBy: {
             updatedAt: "desc",
         },

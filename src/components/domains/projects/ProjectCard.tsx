@@ -15,16 +15,7 @@ import {
 import Link from "next/link";
 import ProjectDropdown from "./ProjectDropdown";
 import PublishProjectButton from "./PublishProjectButton";
-
-interface Project {
-    id: number;
-    name: string;
-    yearOfProduction: string;
-    description: string;
-    productionLink: string;
-    githubLink: string;
-    isPublished: boolean;
-}
+import { Project } from "@prisma/client";
 
 const ProjectCard = ({ project }: { project: Project }) => {
     const {
@@ -74,11 +65,13 @@ const ProjectCard = ({ project }: { project: Project }) => {
                     {description}
                 </CardDescription>
                 <div className="flex gap-4">
-                    <Link href={githubLink}>
-                        <Button variant="outline">
-                            <GitHubLogoIcon className="mr-1" /> Github
-                        </Button>
-                    </Link>
+                    {githubLink && (
+                        <Link href={githubLink}>
+                            <Button variant="outline">
+                                <GitHubLogoIcon className="mr-1" /> Github
+                            </Button>
+                        </Link>
+                    )}
                     <Link href={productionLink}>
                         <Button variant="outline">
                             <GlobeIcon className="mr-1" />
