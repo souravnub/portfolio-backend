@@ -427,3 +427,58 @@ export async function deleteMessage(messageId: number, formData: FormData) {
         };
     }
 }
+
+export async function updateContributor({
+    id,
+    data,
+}: {
+    id: number;
+    data: Prisma.ContributorUpdateInput;
+}) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+    try {
+        await prisma.contributor.update({
+            where: {
+                id,
+            },
+            data,
+        });
+        revalidatePath(`/contributors/${id}/edit`);
+        return {
+            success: true,
+            message: "Contributor data updated successfully",
+        };
+    } catch (err) {
+        return { success: false, message: "Error while updating data in DB" };
+    }
+}
+
+export async function addContributor({
+    data,
+}: {
+    data: Prisma.ContributorCreateInput;
+}) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+    try {
+        const createdContributor = await prisma.contributor.create({
+            data,
+        });
+        revalidatePath(`/contributors`);
+        revalidatePath(`/contributors/${createdContributor.id}/edit`);
+
+        return {
+            success: true,
+            message: "Contributor added successfully",
+        };
+    } catch (err) {
+        return { success: false, message: "Error while updating data in DB" };
+    }
+}

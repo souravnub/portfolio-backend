@@ -1,8 +1,11 @@
 import { updateProjectAction } from "@/actions";
 import FileUpload from "@/components/domains/content/FileUpload";
 import EditProjectForm from "@/components/domains/projects/forms/EditProjectForm";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import prisma from "@/db";
-import React from "react";
+import Link from "next/link";
 
 interface EditProjectpageProps {
     params: { id: string };
@@ -15,8 +18,18 @@ async function getProject(id: number) {
         where: {
             id: Number(id),
         },
+        include: {
+            contributors: true,
+        },
     });
     return project;
+}
+
+async function getContributorData(contributorId: number) {
+    const contributorData = await prisma.contributor.findFirst({
+        where: { id: contributorId },
+    });
+    return contributorData;
 }
 
 const EditProjectPage = async ({ params }: EditProjectpageProps) => {
@@ -29,6 +42,12 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
 
     // TODO: error page showing "no project"
     if (!project) return <div>No project</div>;
+
+    const contributorsPromiseArr = project.contributors.map((c) =>
+        getContributorData(c.contributorId)
+    );
+
+    const contributors = await Promise.all(contributorsPromiseArr);
 
     const defaultValues = {
         ...project,
@@ -222,6 +241,43 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                             return res;
                         }}
                     />
+                </div>
+            </div>
+
+            <div>
+                <Label className="mb-4 block">Contributors</Label>
+                <div className="flex gap-2 flex-wrap">
+                    {contributors
+                        .filter((c) => c !== null)
+                        .map(({ profileImage, firstName, lastName, id }) => {
+                            return (
+                                <Button
+                                    key={id}
+                                    variant={"outline"}
+                                    className="h-auto w-fit space-x-2"
+                                    asChild>
+                                    <Link href={`/contributors/${id}/edit`}>
+                                        <Avatar>
+                                            <AvatarImage
+                                                src={
+                                                    profileImage
+                                                        ? profileImage
+                                                        : undefined
+                                                }
+                                            />
+                                            <AvatarFallback className="w-full grid place-content-center bg-neutral-200 font-medium">
+                                                {firstName[0].toUpperCase() +
+                                                    lastName[0].toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+
+                                        <span>
+                                            {firstName} {lastName}
+                                        </span>
+                                    </Link>
+                                </Button>
+                            );
+                        })}
                 </div>
             </div>
 

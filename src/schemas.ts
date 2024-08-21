@@ -35,3 +35,10 @@ export const ProjectFormSchema = z.object({
     productionLink: z.string().url({ message: "invalid url" }),
     githubLink: z.union([z.literal(""), z.string().trim().url()]),
 });
+
+export const ContributorFormSchema = z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    socialUrl: z.string().url(),
+    contributions: z.array(z.number()),
+});

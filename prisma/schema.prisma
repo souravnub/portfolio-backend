@@ -29,6 +29,7 @@ model Project {
   techUsed String[]
   description String
   skillsEnhanced SkillsEnhanced[]
+  contributors Contribution[]
   quote String?
 
   brandColor String
@@ -76,4 +77,25 @@ model message {
   createdAt DateTime @default(now())
   replied Boolean @default(false)
   isDeleted Boolean @default(false)
+}
+
+
+model Contributor {
+  id Int @id @default(autoincrement())
+  profileImage String?
+  firstName String
+  lastName String
+  socialUrl String
+
+  contributions Contribution[]
+}
+
+model Contribution {
+  id Int @id @default(autoincrement())
+
+  projectId Int
+  contributorId Int 
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contributor Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
 }
