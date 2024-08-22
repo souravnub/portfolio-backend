@@ -8,6 +8,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         signIn: "/login",
     },
     secret: process.env.AUTH_SECRET,
+    callbacks: {
+        async redirect({ url, baseUrl }) {
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            return baseUrl;
+        },
+    },
     providers: [
         Credentials({
             name: "usernmae",
