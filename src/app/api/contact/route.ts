@@ -12,10 +12,19 @@ export async function POST(request: Request, res: Response) {
     const validationRes = contactSchema.safeParse(body);
 
     if (!validationRes.success) {
-        return Response.json({
-            success: false,
-            message: "Input validation failed",
-        });
+        return Response.json(
+            {
+                success: false,
+                message: "Input validation failed",
+            },
+            {
+                headers: {
+                    "Access-Control-Allow-Origin":
+                        process.env.NEXT_PUBLIC_FRONTEND_URL!,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
     }
 
     try {
@@ -27,14 +36,32 @@ export async function POST(request: Request, res: Response) {
             },
         });
 
-        return Response.json({
-            success: true,
-            message: "Message received",
-        });
+        return Response.json(
+            {
+                success: true,
+                message: "Message received",
+            },
+            {
+                headers: {
+                    "Access-Control-Allow-Origin":
+                        process.env.NEXT_PUBLIC_FRONTEND_URL!,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
     } catch (err) {
-        return Response.json({
-            success: false,
-            message: "Error while saving message! Please try again.",
-        });
+        return Response.json(
+            {
+                success: false,
+                message: "Error while saving message! Please try again.",
+            },
+            {
+                headers: {
+                    "Access-Control-Allow-Origin":
+                        process.env.NEXT_PUBLIC_FRONTEND_URL!,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
     }
 }
