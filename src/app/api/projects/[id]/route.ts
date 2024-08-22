@@ -1,4 +1,5 @@
 import prisma from "@/db";
+import { getProjectWithContributors } from "@/lib/utils";
 
 export async function GET(
     request: Request,
@@ -8,7 +9,8 @@ export async function GET(
         where: { isPublished: true },
         orderBy: { createdAt: "desc" },
     });
-    const project = projects.find((proj) => proj.id === Number(params.id));
+
+    const project = await getProjectWithContributors(Number(params.id));
 
     if (!project) {
         return Response.json({
@@ -17,7 +19,7 @@ export async function GET(
         });
     }
 
-    const currProjIdx = projects.indexOf(project);
+    const currProjIdx = projects.findIndex((proj) => proj.id === project.id);
 
     return Response.json(
         {

@@ -4,7 +4,7 @@ import EditProjectForm from "@/components/domains/projects/forms/EditProjectForm
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import prisma from "@/db";
+import { getProjectWithContributors } from "@/lib/utils";
 import Link from "next/link";
 
 interface EditProjectpageProps {
@@ -13,41 +13,16 @@ interface EditProjectpageProps {
 
 export const dynamic = "force-dynamic";
 
-async function getProject(id: number) {
-    const project = await prisma.project.findFirst({
-        where: {
-            id: Number(id),
-        },
-        include: {
-            contributors: true,
-        },
-    });
-    return project;
-}
-
-async function getContributorData(contributorId: number) {
-    const contributorData = await prisma.contributor.findFirst({
-        where: { id: contributorId },
-    });
-    return contributorData;
-}
-
 const EditProjectPage = async ({ params }: EditProjectpageProps) => {
     // TODO: error page showing "invalid args"
     if (Number.isNaN(Number(params.id)) === true) {
         return <div>invalid args</div>;
     }
 
-    const project = await getProject(Number(params.id));
+    const project = await getProjectWithContributors(Number(params.id));
 
     // TODO: error page showing "no project"
     if (!project) return <div>No project</div>;
-
-    const contributorsPromiseArr = project.contributors.map((c) =>
-        getContributorData(c.contributorId)
-    );
-
-    const contributors = await Promise.all(contributorsPromiseArr);
 
     const defaultValues = {
         ...project,
@@ -247,9 +222,8 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
             <div>
                 <Label className="mb-4 block">Contributors</Label>
                 <div className="flex gap-2 flex-wrap">
-                    {contributors
-                        .filter((c) => c !== null)
-                        .map(({ profileImage, firstName, lastName, id }) => {
+                    {project.contributors.map(
+                        ({ profileImage, firstName, lastName, id }) => {
                             return (
                                 <Button
                                     key={id}
@@ -277,7 +251,8 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                                     </Link>
                                 </Button>
                             );
-                        })}
+                        }
+                    )}
                 </div>
             </div>
 
