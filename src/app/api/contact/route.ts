@@ -4,7 +4,11 @@ import { z } from "zod";
 const contactSchema = z.object({
     name: z.string().min(1),
     email: z.string().email("Invalid email"),
-    message: z.string().min(10, "message should be atleast 10 characters long"),
+    message: z
+        .string()
+        .trim()
+        .min(10, "message should be atleast 10 characters long"),
+    token: z.string().min(1),
 });
 
 export async function POST(request: Request, res: Response) {
@@ -16,6 +20,36 @@ export async function POST(request: Request, res: Response) {
             {
                 success: false,
                 message: "Input validation failed",
+            },
+            {
+                headers: {
+                    "Access-Control-Allow-Origin":
+                        process.env.NEXT_PUBLIC_FRONTEND_URL!,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    }
+
+    const captchaURL =
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+    const captchaValidationRes = await fetch(captchaURL, {
+        body: JSON.stringify({
+            secret: process.env.CLOUDFRONT_SITE_SECRET_KEY,
+            response: validationRes.data.token,
+        }),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const captchaValidationOutcome = await captchaValidationRes.json();
+
+    if (!captchaValidationOutcome.success) {
+        return Response.json(
+            {
+                success: false,
+                message: "Capthcha validation failed",
             },
             {
                 headers: {
