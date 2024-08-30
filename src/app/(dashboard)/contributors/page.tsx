@@ -22,6 +22,9 @@ const ContributorsPage = async () => {
         include: {
             contributions: true,
         },
+        orderBy: {
+            id: "asc",
+        },
     });
 
     return (
