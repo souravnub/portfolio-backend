@@ -1,5 +1,6 @@
 import {
     DeletedObject,
+    DeleteObjectCommand,
     DeleteObjectsCommand,
     ListObjectsV2Command,
     ObjectIdentifier,
@@ -13,6 +14,23 @@ export const s3Client = new S3Client({
         secretAccessKey: process.env.AWS_IAM_SECRET_KEY!,
     },
 });
+
+export async function deleteObject(objectKey: string) {
+    try {
+        await s3Client.send(
+            new DeleteObjectCommand({
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: objectKey,
+            })
+        );
+        return { success: true, message: "Asset deleted from AWS" };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Error while deleting objects from AWS",
+        };
+    }
+}
 
 export async function clearDirectory(directoryKey: string): Promise<
     | {

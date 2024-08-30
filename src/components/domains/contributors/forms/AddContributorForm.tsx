@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { ContributorFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,6 +33,7 @@ const AddContributorForm = ({
         },
     });
     const { toast } = useToast();
+    const router = useRouter();
 
     form.watch(["firstName", "lastName"]);
 
@@ -53,6 +55,10 @@ const AddContributorForm = ({
             variant: res.success ? "default" : "destructive",
             description: res.message,
         });
+
+        if (res.success) {
+            router.push("/contributors");
+        }
     }
 
     return (

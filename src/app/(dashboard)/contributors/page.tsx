@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
+import DeleteContributorButton from "@/components/domains/contributors/DeleteContributorButton";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,11 @@ const ContributorsPage = async () => {
             </div>
 
             <Table className="border border-border">
-                <TableCaption>A list of contributors.</TableCaption>
+                <TableCaption>
+                    {contributors.length > 0
+                        ? "A list of contributors."
+                        : "No active contributors to display"}
+                </TableCaption>
                 <TableHeader className="bg-muted">
                     <TableRow>
                         <TableHead>Id</TableHead>
@@ -121,13 +126,20 @@ const ContributorsPage = async () => {
                                             }
                                         )}
                                     </TableCell>
-                                    <TableCell className="w-fit">
+                                    <TableCell className="w-min space-x-2">
                                         <Button asChild variant={"outline"}>
                                             <Link
                                                 href={`/contributors/${id}/edit`}>
                                                 Edit
                                             </Link>
                                         </Button>
+
+                                        <DeleteContributorButton
+                                            contributorId={id}
+                                            haveProfileImage={
+                                                profileImage ? true : false
+                                            }
+                                        />
                                     </TableCell>
                                 </TableRow>
                             );

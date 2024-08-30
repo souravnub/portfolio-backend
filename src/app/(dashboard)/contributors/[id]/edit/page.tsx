@@ -43,7 +43,7 @@ const EditContributorPage = async ({ params }: PageProps) => {
                 assetType="image"
                 fileSource={contributor.profileImage}
                 objectDirectory="contributors/"
-                objectKey={contributor.firstName + contributor.lastName}
+                objectKey={contributor.id.toString()}
                 saveFileInDbAction={async (newImageUrl) => {
                     "use server";
                     return updateContributor({

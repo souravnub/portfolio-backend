@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "./db";
-import { clearDirectory, s3Client } from "./lib/utils/awsUtils";
+import { clearDirectory, deleteObject, s3Client } from "./lib/utils/awsUtils";
 import {
     ALLOWED_IMAGE_FILE_TYPES,
     ALLOWED_VIDEO_FILE_TYPES,
@@ -130,6 +130,7 @@ export async function updateProjectAction({
             data,
         });
         revalidatePath(`/projects/${id}/edit`);
+
         return {
             success: true,
             message: "DB update successfull",
@@ -471,12 +472,42 @@ export async function addContributor({
         const createdContributor = await prisma.contributor.create({
             data,
         });
+
         revalidatePath(`/contributors`);
         revalidatePath(`/contributors/${createdContributor.id}/edit`);
 
         return {
             success: true,
             message: "Contributor added successfully",
+        };
+    } catch (err) {
+        return { success: false, message: "Error while updating data in DB" };
+    }
+}
+
+export async function deleteContributor({
+    contributorId,
+    haveProfileImage,
+}: {
+    contributorId: number;
+    haveProfileImage: boolean;
+}) {
+    const { isAuthorized } = await authorizeUser();
+
+    if (!isAuthorized) {
+        return { success: false, message: "Not authorized" };
+    }
+    try {
+        await prisma.contributor.delete({ where: { id: contributorId } });
+
+        if (haveProfileImage) {
+            await deleteObject("contributors/" + contributorId.toString());
+        }
+
+        revalidatePath(`/contributors`);
+        return {
+            success: true,
+            message: "Contributor deleted successfully",
         };
     } catch (err) {
         return { success: false, message: "Error while updating data in DB" };
