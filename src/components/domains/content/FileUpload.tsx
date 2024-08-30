@@ -54,7 +54,7 @@ const Preview = ({
                     alt=""
                     width={previewWidth}
                     height={0} // will be auto as per css
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer mx-auto"
                 />
             );
 
@@ -67,7 +67,7 @@ const Preview = ({
                     loop
                     muted
                     src={preview}
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer mx-auto"
                 />
             );
 
@@ -248,7 +248,7 @@ const FileUpload = ({
                     </div>
                 )}
             </div>
-            <Label htmlFor={id} className="block mx-auto" style={{ width }}>
+            <Label htmlFor={id}>
                 <Preview
                     assetType={assetType}
                     preview={preview}

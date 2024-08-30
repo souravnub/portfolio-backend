@@ -28,7 +28,6 @@ async function main() {
             productionLink: "https://smart-shopping-website.netlify.app/",
             githubLink:
                 "https://github.com/souravnub/smart-shopping-website-frontend",
-            inSiteLinkText: "/smart",
             tabletImageUrl:
                 "https://portfolio-bucket-prod.s3.us-east-1.amazonaws.com/projects/S%20Mart/tabletAssets/tablet-image?1722052430560",
             tabletVideoUrl:

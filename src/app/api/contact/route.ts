@@ -35,7 +35,7 @@ export async function POST(request: Request, res: Response) {
         "https://challenges.cloudflare.com/turnstile/v0/siteverify";
     const captchaValidationRes = await fetch(captchaURL, {
         body: JSON.stringify({
-            secret: process.env.CLOUDFRONT_SITE_SECRET_KEY,
+            secret: process.env.CLOUDFLARE_SITE_SECRET_KEY,
             response: validationRes.data.token,
         }),
         method: "POST",

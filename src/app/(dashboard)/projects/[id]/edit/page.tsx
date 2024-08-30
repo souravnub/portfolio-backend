@@ -219,42 +219,44 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                 </div>
             </div>
 
-            <div>
-                <Label className="mb-4 block">Contributors</Label>
-                <div className="flex gap-2 flex-wrap">
-                    {project.contributors.map(
-                        ({ profileImage, firstName, lastName, id }) => {
-                            return (
-                                <Button
-                                    key={id}
-                                    variant={"outline"}
-                                    className="h-auto w-fit space-x-2"
-                                    asChild>
-                                    <Link href={`/contributors/${id}/edit`}>
-                                        <Avatar>
-                                            <AvatarImage
-                                                src={
-                                                    profileImage
-                                                        ? profileImage
-                                                        : undefined
-                                                }
-                                            />
-                                            <AvatarFallback className="w-full grid place-content-center bg-neutral-200 font-medium">
-                                                {firstName[0].toUpperCase() +
-                                                    lastName[0].toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
+            {project.contributors.length > 0 && (
+                <div>
+                    <Label className="mb-4 block">Contributors</Label>
+                    <div className="flex gap-2 flex-wrap">
+                        {project.contributors.map(
+                            ({ profileImage, firstName, lastName, id }) => {
+                                return (
+                                    <Button
+                                        key={id}
+                                        variant={"outline"}
+                                        className="h-auto w-fit space-x-2"
+                                        asChild>
+                                        <Link href={`/contributors/${id}/edit`}>
+                                            <Avatar>
+                                                <AvatarImage
+                                                    src={
+                                                        profileImage
+                                                            ? profileImage
+                                                            : undefined
+                                                    }
+                                                />
+                                                <AvatarFallback className="w-full grid place-content-center bg-neutral-200 font-medium">
+                                                    {firstName[0].toUpperCase() +
+                                                        lastName[0].toUpperCase()}
+                                                </AvatarFallback>
+                                            </Avatar>
 
-                                        <span>
-                                            {firstName} {lastName}
-                                        </span>
-                                    </Link>
-                                </Button>
-                            );
-                        }
-                    )}
+                                            <span>
+                                                {firstName} {lastName}
+                                            </span>
+                                        </Link>
+                                    </Button>
+                                );
+                            }
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <EditProjectForm
                 defaultValues={defaultValues}
