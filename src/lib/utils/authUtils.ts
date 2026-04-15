@@ -2,12 +2,6 @@ import prisma from "@/db";
 import bcrypt from "bcryptjs";
 import { auth } from "../auth";
 
-interface validationRes {
-    success: boolean;
-    message: string;
-    user: { id: number };
-}
-
 export async function authorizeUser() {
     const a = await auth();
     if (!a?.user) {
