@@ -35,7 +35,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
                         <div
                             className={`${
                                 isPublished ? "bg-green-600" : "bg-red-500"
-                            } w-2.5 h-2.5 mt-2  rounded-full`}></div>
+                            } w-2.5 h-2.5 mt-2  rounded-full`}
+                        ></div>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>
@@ -50,11 +51,17 @@ const ProjectCard = ({ project }: { project: Project }) => {
             <div className="flex-1">
                 <div className="flex justify-between">
                     <div className="flex items-center gap-2">
-                        <Link
-                            href={productionLink}
-                            className="hover:underline underline-offset-2">
-                            {name}
-                        </Link>
+                        {productionLink ? (
+                            <Link
+                                href={productionLink}
+                                className="hover:underline underline-offset-2"
+                            >
+                                {name}
+                            </Link>
+                        ) : (
+                            <span>{name}</span>
+                        )}
+
                         <Badge variant={"secondary"}>{yearOfProduction}</Badge>
                     </div>
 
@@ -72,12 +79,14 @@ const ProjectCard = ({ project }: { project: Project }) => {
                             </Button>
                         </Link>
                     )}
-                    <Link href={productionLink}>
-                        <Button variant="outline">
-                            <GlobeIcon className="mr-1" />
-                            Production
-                        </Button>
-                    </Link>
+                    {productionLink && (
+                        <Link href={productionLink}>
+                            <Button variant="outline">
+                                <GlobeIcon className="mr-1" />
+                                Production
+                            </Button>
+                        </Link>
+                    )}
                     <PublishProjectButton
                         projectId={id}
                         isPublished={isPublished}

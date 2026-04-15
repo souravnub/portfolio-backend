@@ -14,37 +14,36 @@ datasource db {
 }
 
 model Admin {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id       Int    @id @default(autoincrement())
+  name     String @unique
   password String
 }
 
-
 model Project {
-  id Int @id @default(autoincrement())
-  name String 
-  role String
-  image String?
+  id               Int              @id @default(autoincrement())
+  name             String
+  role             String
+  image            String?
   yearOfProduction String
-  techUsed String[]
-  description String
-  skillsEnhanced SkillsEnhanced[]
-  contributors Contribution[]
-  quote String?
+  techUsed         String[]
+  description      String
+  skillsEnhanced   SkillsEnhanced[]
+  contributors     Contribution[]
+  quote            String?
 
-  brandColor String
-  brandImageUrl String?
+  brandColor        String
+  brandImageUrl     String?
   brandNameImageUrl String?
 
-  videoUrl String?
+  videoUrl        String?
   mobileImageUrl1 String?
   mobileImageUrl2 String?
-  mobileVideoUrl String?
-  tabletVideoUrl String?
-  tabletImageUrl String?
+  mobileVideoUrl  String?
+  tabletVideoUrl  String?
+  tabletImageUrl  String?
 
-  productionLink String
-  githubLink String?
+  productionLink String?
+  githubLink     String?
 
   isPublished Boolean @default(false)
 
@@ -53,39 +52,38 @@ model Project {
 }
 
 model SkillsEnhanced {
-  id Int @id @default(autoincrement())
-  projectId Int 
-  name String
+  id          Int     @id @default(autoincrement())
+  projectId   Int
+  name        String
   description String
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model HomePageContent {
-  id Int @id @default(autoincrement())
-  mainImageUrl String
-  country String
-  role String
-  portfolio_slogan String
+  id                    Int    @id @default(autoincrement())
+  mainImageUrl          String
+  country               String
+  role                  String
+  portfolio_slogan      String
   portfolio_description String
 }
 
 model message {
-  id Int @id @default(autoincrement())
-  name String
-  email String
-  message String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String
   createdAt DateTime @default(now())
-  replied Boolean @default(false)
-  isDeleted Boolean @default(false)
+  replied   Boolean  @default(false)
+  isDeleted Boolean  @default(false)
 }
 
-
 model Contributor {
-  id Int @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   profileImage String?
-  firstName String
-  lastName String
-  socialUrl String
+  firstName    String
+  lastName     String
+  socialUrl    String
 
   contributions Contribution[]
 }
@@ -93,9 +91,9 @@ model Contributor {
 model Contribution {
   id Int @id @default(autoincrement())
 
-  projectId Int
-  contributorId Int 
+  projectId     Int
+  contributorId Int
 
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
   contributor Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
 }

@@ -32,7 +32,9 @@ export const ProjectFormSchema = z.object({
         .string()
         .length(7, "Hex color code is supposed to be 7 characters"),
 
-    productionLink: z.string().url({ message: "invalid url" }),
+    productionLink: z
+        .union([z.literal(""), z.string().url({ message: "invalid url" })])
+        .optional(),
     githubLink: z.union([z.literal(""), z.string().trim().url()]),
 });
 

@@ -29,6 +29,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
         techUsed: project?.techUsed.map((e) => ({ value: e })),
         quote: project.quote === null ? undefined : project.quote,
         githubLink: project.githubLink === null ? "" : project.githubLink,
+        productionLink: project.productionLink ?? "",
     };
 
     return (
@@ -230,7 +231,8 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                                         key={id}
                                         variant={"outline"}
                                         className="h-auto w-fit space-x-2"
-                                        asChild>
+                                        asChild
+                                    >
                                         <Link href={`/contributors/${id}/edit`}>
                                             <Avatar>
                                                 <AvatarImage
@@ -252,7 +254,7 @@ const EditProjectPage = async ({ params }: EditProjectpageProps) => {
                                         </Link>
                                     </Button>
                                 );
-                            }
+                            },
                         )}
                     </div>
                 </div>
